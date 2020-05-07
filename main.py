@@ -57,7 +57,7 @@
 #    electric efficiency, the ratio of electric power and engine generating power(?), engine component efficiency,
 #    BLI parameters
 # 5. engine configuration parameters
-#    the number of engine, thrust of engine
+#    the number of engine, thrust of engine at design point, thrust of engine at off design point
 
 
 # the definition of flight path
@@ -86,34 +86,60 @@
 # bname   1  2  3       5
 
 
+# Module
+# Physic class() (physics.py)=> to compute the value of physics(ex. density, Pressure, Temperature,...)
+# Design variables controller class() => to assign design variables into each class and adjust the interaction of design variables
+# Mission class() => define the mission
+# Aircraft parameters class() => to keep the aircraft parameters
+#          return params => numpy array  * Initialize 0 array
+# Aircraft performance class() => compute aerodynamic performance and weight
+#    aircraft aerodynamic performance class() => calculate L/D at cruise
+#    aircraft weight class() => calculate overall weight
+#           return weight results => numpy array   * Initialize 0 array
+#           component class()
+# Engine parameters class() => to keep the engine parameters
+#          return params => numpy array   * Initialize 0 array
+# Engine performance class() => compute thermodynamic performance and weight
+#    engine thermodynamic class() => calculate SFC and Thrust at cruise and takeoff
+#        design point class()
+#           return thermodynamic results at design point => numpy array
+#        off design point class()
+#           return thermodynamic results at off design point => numpy array
+#    engine weight class() => calculate engine weight(core weight, electric fan weight, electricity weight)
+#        core weight class()
+#           return core weight results => numpy array  * Initialize 0 array
+#        electric fan weight class()
+#           return electric fan weight results => numpy array  * Initialize 0 array
+#        electricity weight class() => (battery weight, fuel cell weight, biological fuel weight)
+#           return electricity weight => numpy array  * Initialize 0 array
+#            component class()
+# Aircraft view class() => to plot the aircraft's view based on the given parameters
+# Baseline tuning class() => define the scale factor for aircraft design(from public value)
+# DataBase manage class() => manage the database values
 
+
+# Optimization module
+# Gradient descent class() -> main function: class object.optimize()
+# Evolutionary Algorithm class()
+#     NSGA2() -> main function: class object.optimize()
+#     PSO() -> main function: class object.optimize()
+#     CMAES() -> main function: class object.optimize()
+
+
+# Analysis module
+# plot contour
+# plot result by jupyter notebook
+
+
+# Self driving module
+
+
+# UseCase for IAEA
 # Implementation of aircraft design
 # 0. tuning the baseline model
 # 1. input design variables
 # 2. calculate the objective function
 # 3. plot the shape parameters at plotter library and save them(csv file)
-
-# module
-# Physic class() => to compute the value of physics(ex. density, Pressure, Temperature,...)
-# Design variables controller class() => to assign design variables into each class and adjust the interaction of design variables
-# Mission class() => define the mission
-# Aircraft parameters class() => to keep the aircraft parameters
-# Aircraft performance class() => compute aerodynamic performance and weight
-#    aircraft aerodynamic performance class() => calculate L/D at cruise
-#    aircraft weight class() => calculate overall weight
-#           component class()
-#
-# Engine parameters class() => to keep the engine parameters
-# Engine performance class() => compute thermodynamic performance and weight
-#    engine thermodynamic class() => calculate SFC and Thrust at cruise and takeoff
-#    engine weight class() => calculate engine weight(core weight, electric fan weight, electricity weight)
-#        core weight class()
-#        electric fan weight class()
-#        electricity weight class() => (battery weight, fuel cell weight, biological fuel weight)
-#            component class()
-# Aircraft view class() => to plot the aircraft's view based on the given parameters
-# Baseline tuning class() => define the scale factor for aircraft design(from public value)
-# DataBase manage class() => manage the database values
 
 
 # Implementation of optimization of aircraft design
@@ -130,8 +156,6 @@
 # 2. set the city obstacle or landmark
 # 3. apply RL(Reinforcement Learning) or SLAM(Simultaneous Localization and Mapping) in order to find the better path
 # 4. plot the explored path at graph
-
-import numpy as np
 
 
 
