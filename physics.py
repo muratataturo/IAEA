@@ -133,16 +133,30 @@ class Physics(object):
         self.rou = 0.0034837 * self.P / self.T
 
     def velocity(self):
+        """
+        calculate tone velocity
+        :return: None
+        """
 
         self.a = 20.0468 * math.sqrt(self.T)
 
     def viscosity(self):
+        """
+        calculate viscosity
+        S : Sutherland constant
+        beta: constant
+        :return: None
+        """
 
         S = 110.4  # サザーランド定数
         beta = 1.458e-6  # 係数
         self.mu = beta * self.T ** 1.5 / (self.T + S)
 
     def dynamic_viscosity(self):
+        """
+        calculate dynamic viscosity
+        :return: None
+        """
 
         self.kai = self.mu / self.rou
 
