@@ -160,30 +160,57 @@
 <dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
 <dl class="option-list">
 <dt><kbd><span class="option">--Attributes--</span></kbd></dt>
-<dd><p>r0: constant value of geo potential [km], type(double)</p>
-<p>H : reference value of geo potential [km], type(double)</p>
-<p><strong>**reference value(0 m)**</strong></p>
-<p>T0: reference value of static temperature [K], type(double)</p>
-<p>P0: reference value of static pressure [pa], type(double)</p>
-<p>ref_K: absolute zero [K], type(double)</p>
-<p>T: static temperature [K], type(double)</p>
-<p>P: static pressure [pa], type(double)</p>
-<p>rou: density [kg/m^3], type(double)</p>
-<p>rou0: reference value of density [kg/m^3]</p>
-<p>a: tone velocity [m/s]</p>
-<p>a0: reference value of tone velocity [m/s]</p>
-<p>mu: viscosity [Ns/m^2]</p>
-<p>mu0: reference value of viscosity [Ns/m^2]</p>
-<p>kai: dynamic viscosity [m^2/s]</p>
-<p>kai0: reference value of dynamic viscosity</p>
+<dd><dl class="simple">
+<dt>r0</dt><dd><p>constant value of geo potential [km], type(double)</p>
+</dd>
+<dt>H</dt><dd><p>reference value of geo potential [km], type(double)</p>
+</dd>
+</dl>
+<p><strong>reference value(0 m)</strong></p>
+<dl class="simple">
+<dt>T0</dt><dd><p>reference value of static temperature [K], type(double)</p>
+</dd>
+<dt>P0</dt><dd><p>reference value of static pressure [pa], type(double)</p>
+</dd>
+<dt>ref_K</dt><dd><p>absolute zero [K], type(double)</p>
+</dd>
+<dt>T</dt><dd><p>static temperature [K], type(double)</p>
+</dd>
+<dt>P</dt><dd><p>static pressure [pa], type(double)</p>
+</dd>
+<dt>rou</dt><dd><p>density [kg/m^3], type(double)</p>
+</dd>
+<dt>rou0</dt><dd><p>reference value of density [kg/m^3]</p>
+</dd>
+<dt>a</dt><dd><p>tone velocity [m/s]</p>
+</dd>
+<dt>a0</dt><dd><p>reference value of tone velocity [m/s]</p>
+</dd>
+<dt>mu</dt><dd><p>viscosity [Ns/m^2]</p>
+</dd>
+<dt>mu0</dt><dd><p>reference value of viscosity [Ns/m^2]</p>
+</dd>
+<dt>kai</dt><dd><p>dynamic viscosity [m^2/s]</p>
+</dd>
+<dt>kai0</dt><dd><p>reference value of dynamic viscosity</p>
+</dd>
+</dl>
 </dd>
 <dt><kbd><span class="option">--Method--</span></kbd></dt>
-<dd><p>geo_potential(): calculate geo potential</p>
-<p>temperature_and_pressure(): compute static temperature and pressure</p>
-<p>density(): calculate density, P = n * R * T</p>
-<p>velocity(): calculate tone velocity, a = sqrt(gamma * R * T)</p>
-<p>viscosity(): calculate viscosity</p>
-<p>dynamic_viscosity(): calculate dynamic viscosity</p>
+<dd><dl class="simple">
+<dt>geo_potential()</dt><dd><p>calculate geo potential</p>
+</dd>
+<dt>temperature_and_pressure()</dt><dd><p>compute static temperature and pressure</p>
+</dd>
+<dt>density()</dt><dd><p>calculate density, P = n * R * T</p>
+</dd>
+<dt>velocity()</dt><dd><p>calculate tone velocity, a = sqrt(gamma * R * T)</p>
+</dd>
+<dt>viscosity()</dt><dd><p>calculate viscosity</p>
+</dd>
+<dt>dynamic_viscosity()</dt><dd><p>calculate dynamic viscosity</p>
+</dd>
+</dl>
 </dd>
 </dl>
 <dl class="py method">

@@ -150,50 +150,71 @@
 <div class="viewcode-block" id="Physics"><a class="viewcode-back" href="../physics.html#physics.Physics">[docs]</a><span class="k">class</span> <span class="nc">Physics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
     <span class="sd">&quot;&quot;&quot;</span>
 <span class="sd">    --Attributes--</span>
-<span class="sd">        r0: constant value of geo potential [km], type(double)</span>
+<span class="sd">        r0</span>
+<span class="sd">          constant value of geo potential [km], type(double)</span>
 
-<span class="sd">        H : reference value of geo potential [km], type(double)</span>
+<span class="sd">        H</span>
+<span class="sd">          reference value of geo potential [km], type(double)</span>
 
-<span class="sd">        ****reference value(0 m)****</span>
+<span class="sd">        **reference value(0 m)**</span>
 
-<span class="sd">        T0: reference value of static temperature [K], type(double)</span>
+<span class="sd">        T0</span>
+<span class="sd">          reference value of static temperature [K], type(double)</span>
 
-<span class="sd">        P0: reference value of static pressure [pa], type(double)</span>
+<span class="sd">        P0</span>
+<span class="sd">          reference value of static pressure [pa], type(double)</span>
 
-<span class="sd">        ref_K: absolute zero [K], type(double)</span>
+<span class="sd">        ref_K</span>
+<span class="sd">          absolute zero [K], type(double)</span>
 
-<span class="sd">        T: static temperature [K], type(double)</span>
+<span class="sd">        T</span>
+<span class="sd">          static temperature [K], type(double)</span>
 
-<span class="sd">        P: static pressure [pa], type(double)</span>
+<span class="sd">        P</span>
+<span class="sd">          static pressure [pa], type(double)</span>
 
-<span class="sd">        rou: density [kg/m^3], type(double)</span>
+<span class="sd">        rou</span>
+<span class="sd">          density [kg/m^3], type(double)</span>
 
-<span class="sd">        rou0: reference value of density [kg/m^3]</span>
+<span class="sd">        rou0</span>
+<span class="sd">          reference value of density [kg/m^3]</span>
 
-<span class="sd">        a: tone velocity [m/s]</span>
+<span class="sd">        a</span>
+<span class="sd">          tone velocity [m/s]</span>
 
-<span class="sd">        a0: reference value of tone velocity [m/s]</span>
+<span class="sd">        a0</span>
+<span class="sd">          reference value of tone velocity [m/s]</span>
 
-<span class="sd">        mu: viscosity [Ns/m^2]</span>
+<span class="sd">        mu</span>
+<span class="sd">          viscosity [Ns/m^2]</span>
 
-<span class="sd">        mu0: reference value of viscosity [Ns/m^2]</span>
+<span class="sd">        mu0</span>
+<span class="sd">          reference value of viscosity [Ns/m^2]</span>
 
-<span class="sd">        kai: dynamic viscosity [m^2/s]</span>
+<span class="sd">        kai</span>
+<span class="sd">          dynamic viscosity [m^2/s]</span>
 
-<span class="sd">        kai0: reference value of dynamic viscosity</span>
+<span class="sd">        kai0</span>
+<span class="sd">          reference value of dynamic viscosity</span>
 
 <span class="sd">    --Method--</span>
-<span class="sd">        geo_potential(): calculate geo potential</span>
+<span class="sd">        geo_potential()</span>
+<span class="sd">            calculate geo potential</span>
 
-<span class="sd">        temperature_and_pressure(): compute static temperature and pressure</span>
+<span class="sd">        temperature_and_pressure()</span>
+<span class="sd">            compute static temperature and pressure</span>
 
-<span class="sd">        density(): calculate density, P = n * R * T</span>
+<span class="sd">        density()</span>
+<span class="sd">            calculate density, P = n * R * T</span>
 
-<span class="sd">        velocity(): calculate tone velocity, a = sqrt(gamma * R * T)</span>
+<span class="sd">        velocity()</span>
+<span class="sd">            calculate tone velocity, a = sqrt(gamma * R * T)</span>
 
-<span class="sd">        viscosity(): calculate viscosity</span>
+<span class="sd">        viscosity()</span>
+<span class="sd">            calculate viscosity</span>
 
-<span class="sd">        dynamic_viscosity(): calculate dynamic viscosity</span>
+<span class="sd">        dynamic_viscosity()</span>
+<span class="sd">            calculate dynamic viscosity</span>
 
 
 

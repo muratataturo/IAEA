@@ -4,50 +4,71 @@ import math
 class Physics(object):
     """
     --Attributes--
-        r0: constant value of geo potential [km], type(double)
+        r0
+          constant value of geo potential [km], type(double)
 
-        H : reference value of geo potential [km], type(double)
+        H
+          reference value of geo potential [km], type(double)
 
-        ****reference value(0 m)****
+        **reference value(0 m)**
 
-        T0: reference value of static temperature [K], type(double)
+        T0
+          reference value of static temperature [K], type(double)
 
-        P0: reference value of static pressure [pa], type(double)
+        P0
+          reference value of static pressure [pa], type(double)
 
-        ref_K: absolute zero [K], type(double)
+        ref_K
+          absolute zero [K], type(double)
 
-        T: static temperature [K], type(double)
+        T
+          static temperature [K], type(double)
 
-        P: static pressure [pa], type(double)
+        P
+          static pressure [pa], type(double)
 
-        rou: density [kg/m^3], type(double)
+        rou
+          density [kg/m^3], type(double)
 
-        rou0: reference value of density [kg/m^3]
+        rou0
+          reference value of density [kg/m^3]
 
-        a: tone velocity [m/s]
+        a
+          tone velocity [m/s]
 
-        a0: reference value of tone velocity [m/s]
+        a0
+          reference value of tone velocity [m/s]
 
-        mu: viscosity [Ns/m^2]
+        mu
+          viscosity [Ns/m^2]
 
-        mu0: reference value of viscosity [Ns/m^2]
+        mu0
+          reference value of viscosity [Ns/m^2]
 
-        kai: dynamic viscosity [m^2/s]
+        kai
+          dynamic viscosity [m^2/s]
 
-        kai0: reference value of dynamic viscosity
+        kai0
+          reference value of dynamic viscosity
 
     --Method--
-        geo_potential(): calculate geo potential
+        geo_potential()
+            calculate geo potential
 
-        temperature_and_pressure(): compute static temperature and pressure
+        temperature_and_pressure()
+            compute static temperature and pressure
 
-        density(): calculate density, P = n * R * T
+        density()
+            calculate density, P = n * R * T
 
-        velocity(): calculate tone velocity, a = sqrt(gamma * R * T)
+        velocity()
+            calculate tone velocity, a = sqrt(gamma * R * T)
 
-        viscosity(): calculate viscosity
+        viscosity()
+            calculate viscosity
 
-        dynamic_viscosity(): calculate dynamic viscosity
+        dynamic_viscosity()
+            calculate dynamic viscosity
 
 
 
