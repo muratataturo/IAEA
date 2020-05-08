@@ -1,0 +1,382 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>physics &mdash; IAEA 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> IAEA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">IAEA</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">IAEA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>physics</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for physics</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">math</span>
+
+
+<div class="viewcode-block" id="Physics"><a class="viewcode-back" href="../physics.html#physics.Physics">[docs]</a><span class="k">class</span> <span class="nc">Physics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    --Attributes--</span>
+<span class="sd">        r0: constant value of geo potential [km], type(double)</span>
+
+<span class="sd">        H : reference value of geo potential [km], type(double)</span>
+
+<span class="sd">        ****reference value(0 m)****</span>
+
+<span class="sd">        T0: reference value of static temperature [K], type(double)</span>
+
+<span class="sd">        P0: reference value of static pressure [pa], type(double)</span>
+
+<span class="sd">        ref_K: absolute zero [K], type(double)</span>
+
+<span class="sd">        T: static temperature [K], type(double)</span>
+
+<span class="sd">        P: static pressure [pa], type(double)</span>
+
+<span class="sd">        rou: density [kg/m^3], type(double)</span>
+
+<span class="sd">        rou0: reference value of density [kg/m^3]</span>
+
+<span class="sd">        a: tone velocity [m/s]</span>
+
+<span class="sd">        a0: reference value of tone velocity [m/s]</span>
+
+<span class="sd">        mu: viscosity [Ns/m^2]</span>
+
+<span class="sd">        mu0: reference value of viscosity [Ns/m^2]</span>
+
+<span class="sd">        kai: dynamic viscosity [m^2/s]</span>
+
+<span class="sd">        kai0: reference value of dynamic viscosity</span>
+
+<span class="sd">    --Method--</span>
+<span class="sd">        geo_potential(): calculate geo potential</span>
+
+<span class="sd">        temperature_and_pressure(): compute static temperature and pressure</span>
+
+<span class="sd">        density(): calculate density, P = n * R * T</span>
+
+<span class="sd">        velocity(): calculate tone velocity, a = sqrt(gamma * R * T)</span>
+
+<span class="sd">        viscosity(): calculate viscosity</span>
+
+<span class="sd">        dynamic_viscosity(): calculate dynamic viscosity</span>
+
+
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">altitude</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param altitude: type double, cruise altitude</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># constant for geo potential</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">r0</span> <span class="o">=</span> <span class="mf">6356.766</span>  <span class="c1"># [km]</span>
+        <span class="c1"># geo potential</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="n">altitude</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">&gt;=</span> <span class="mi">1000</span><span class="p">:</span>
+
+            <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">/=</span> <span class="mi">1000</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">geo_potential</span><span class="p">()</span>
+
+        <span class="c1"># temperature and pressure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T0</span> <span class="o">=</span> <span class="mi">15</span>  <span class="c1"># [K]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P0</span> <span class="o">=</span> <span class="mi">101325</span>  <span class="c1"># [pa]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">ref_K</span> <span class="o">=</span> <span class="mf">273.15</span>  <span class="c1"># absolute zero</span>
+
+        <span class="c1"># Initialize static Temperature and Pressure at current altitude</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="mi">0</span>
+
+        <span class="c1"># compute static temperature and pressure</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">temperature_and_pressure</span><span class="p">()</span>
+
+        <span class="c1"># density</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rou</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">rou0</span> <span class="o">=</span> <span class="mf">1.225</span>  <span class="c1"># [kg/m^3] value at 0[m]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">density</span><span class="p">()</span>
+
+        <span class="c1"># velocity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">a0</span> <span class="o">=</span> <span class="mf">340.29</span>  <span class="c1"># [m/s]  value at 0[m]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">velocity</span><span class="p">()</span>
+
+        <span class="c1"># viscosity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu0</span> <span class="o">=</span> <span class="mf">1.7849</span> <span class="o">*</span> <span class="mf">1e-5</span>  <span class="c1"># [Ns/m^2]  value at 0[m]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">viscosity</span><span class="p">()</span>
+
+        <span class="c1"># dynamic viscosity</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kai</span> <span class="o">=</span> <span class="mi">0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">kai0</span> <span class="o">=</span> <span class="mf">1.4607</span> <span class="o">*</span> <span class="mf">1e-5</span>  <span class="c1"># [m^2/s]  value at 0[m]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">dynamic_viscosity</span><span class="p">()</span>
+
+<div class="viewcode-block" id="Physics.geo_potential"><a class="viewcode-back" href="../physics.html#physics.Physics.geo_potential">[docs]</a>    <span class="k">def</span> <span class="nf">geo_potential</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        calculate geo potential</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">r0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">r0</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Physics.temperature_and_pressure"><a class="viewcode-back" href="../physics.html#physics.Physics.temperature_and_pressure">[docs]</a>    <span class="k">def</span> <span class="nf">temperature_and_pressure</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        calculate static temperature and pressure</span>
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="k">if</span> <span class="mi">0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">&lt;=</span> <span class="mi">11</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">T0</span> <span class="o">-</span> <span class="mf">6.5</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">P0</span> <span class="o">*</span> <span class="p">(</span><span class="mf">288.15</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_K</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">5.256</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="mi">11</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">&lt;=</span> <span class="mf">20.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="o">-</span><span class="mf">56.5</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="mf">22632.064</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1577</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="mi">11</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="mf">20.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">&lt;=</span> <span class="mf">32.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="o">-</span><span class="mf">76.5</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="mf">5474.889</span> <span class="o">*</span> <span class="p">(</span><span class="mf">216.65</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_K</span><span class="p">))</span> <span class="o">**</span> <span class="mf">34.163</span>
+
+        <span class="k">elif</span> <span class="mf">32.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">&lt;=</span> <span class="mf">47.0</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="o">-</span><span class="mf">134.1</span> <span class="o">+</span> <span class="mf">2.8</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="mf">868.019</span> <span class="o">*</span> <span class="p">(</span><span class="mf">228.65</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_K</span><span class="p">))</span> <span class="o">**</span> <span class="mf">12.201</span>
+
+        <span class="k">elif</span> <span class="mf">47.0</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">&lt;=</span> <span class="mi">51</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="o">-</span><span class="mf">2.5</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="mf">110.906</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="mf">0.1262</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">-</span> <span class="mi">47</span><span class="p">))</span>
+
+        <span class="k">elif</span> <span class="mi">51</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">&lt;=</span> <span class="mi">71</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="mf">140.3</span> <span class="o">-</span> <span class="mf">2.8</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="mf">66.939</span> <span class="o">*</span> <span class="p">(</span><span class="mf">270.65</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_K</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">12.201</span><span class="p">)</span>
+
+        <span class="k">elif</span> <span class="mi">71</span> <span class="o">&lt;=</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span> <span class="o">&lt;=</span> <span class="mf">84.852</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">=</span> <span class="mf">83.5</span> <span class="o">-</span> <span class="mf">2.0</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">H</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">=</span> <span class="mf">3.956</span> <span class="o">*</span> <span class="p">(</span><span class="mf">214.56</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_K</span><span class="p">))</span> <span class="o">**</span> <span class="p">(</span><span class="o">-</span><span class="mf">17.082</span><span class="p">)</span>
+
+        <span class="c1"># change [K] units</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">+=</span> <span class="bp">self</span><span class="o">.</span><span class="n">ref_K</span></div>
+
+<div class="viewcode-block" id="Physics.density"><a class="viewcode-back" href="../physics.html#physics.Physics.density">[docs]</a>    <span class="k">def</span> <span class="nf">density</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        calculate density at cruise altitude</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">rou</span> <span class="o">=</span> <span class="mf">0.0034837</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">P</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span></div>
+
+<div class="viewcode-block" id="Physics.velocity"><a class="viewcode-back" href="../physics.html#physics.Physics.velocity">[docs]</a>    <span class="k">def</span> <span class="nf">velocity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        calculate tone velocity</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">a</span> <span class="o">=</span> <span class="mf">20.0468</span> <span class="o">*</span> <span class="n">math</span><span class="o">.</span><span class="n">sqrt</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Physics.viscosity"><a class="viewcode-back" href="../physics.html#physics.Physics.viscosity">[docs]</a>    <span class="k">def</span> <span class="nf">viscosity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        calculate viscosity</span>
+<span class="sd">        S : Sutherland constant</span>
+<span class="sd">        beta: constant</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="n">S</span> <span class="o">=</span> <span class="mf">110.4</span>  <span class="c1"># サザーランド定数</span>
+        <span class="n">beta</span> <span class="o">=</span> <span class="mf">1.458e-6</span>  <span class="c1"># 係数</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">=</span> <span class="n">beta</span> <span class="o">*</span> <span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">**</span> <span class="mf">1.5</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">T</span> <span class="o">+</span> <span class="n">S</span><span class="p">)</span></div>
+
+<div class="viewcode-block" id="Physics.dynamic_viscosity"><a class="viewcode-back" href="../physics.html#physics.Physics.dynamic_viscosity">[docs]</a>    <span class="k">def</span> <span class="nf">dynamic_viscosity</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        calculate dynamic viscosity</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">kai</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">mu</span> <span class="o">/</span> <span class="bp">self</span><span class="o">.</span><span class="n">rou</span></div></div>
+
+
+
+
+
+
+
+
+
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, tatsuro murata
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

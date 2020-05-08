@@ -5,35 +5,51 @@ class Physics(object):
     """
     --Attributes--
         r0: constant value of geo potential [km], type(double)
+
         H : reference value of geo potential [km], type(double)
 
-        self.geo_potential()
-
-        reference value(0 m)
+        ****reference value(0 m)****
 
         T0: reference value of static temperature [K], type(double)
+
         P0: reference value of static pressure [pa], type(double)
+
         ref_K: absolute zero [K], type(double)
 
         T: static temperature [K], type(double)
+
         P: static pressure [pa], type(double)
 
-        # compute static temperature and pressure
-        self.temperature_and_pressure()
-
         rou: density [kg/m^3], type(double)
+
         rou0: reference value of density [kg/m^3]
 
         a: tone velocity [m/s]
+
         a0: reference value of tone velocity [m/s]
 
         mu: viscosity [Ns/m^2]
+
         mu0: reference value of viscosity [Ns/m^2]
 
-        # dynamic viscosity
         kai: dynamic viscosity [m^2/s]
+
         kai0: reference value of dynamic viscosity
-        self.dynamic_viscousity()
+
+    --Method--
+        geo_potential(): calculate geo potential
+
+        temperature_and_pressure(): compute static temperature and pressure
+
+        density(): calculate density, P = n * R * T
+
+        velocity(): calculate tone velocity, a = sqrt(gamma * R * T)
+
+        viscosity(): calculate viscosity
+
+        dynamic_viscosity(): calculate dynamic viscosity
+
+
 
     """
 
@@ -87,10 +103,18 @@ class Physics(object):
         self.dynamic_viscosity()
 
     def geo_potential(self):
+        """
+        calculate geo potential
+        :return: None
+        """
 
         self.H = self.r0 * self.H / (self.r0 + self.H)
 
     def temperature_and_pressure(self):
+        """
+        calculate static temperature and pressure
+        :return:
+        """
 
         if 0 <= self.H <= 11:
             self.T = self.T0 - 6.5 * self.H

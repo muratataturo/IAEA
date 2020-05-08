@@ -10,7 +10,7 @@ Welcome to IAEA's documentation!
    :maxdepth: 2
    :caption: Contents:
 
-   physics
+   modules
 
 
 

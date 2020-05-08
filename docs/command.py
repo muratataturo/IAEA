@@ -4,5 +4,5 @@
 # sphinx-apidoc -f -o ./docs .
 
 # 2. build sphinx html
-# sphinx-build -b singlehtml ./docs/source ./docs/build
-# sphinx-build -b html ./docs/source ./docs/build
+# In source directory, all .rst file have to be copied.
+# sphinx-build -b html ./source ./build

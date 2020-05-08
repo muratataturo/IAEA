@@ -1,54 +1,133 @@
-# development for conceptual design and simulation for aircraft
-# fuel type => 'jet', 'electric', 'hybrid', 'hydrogen'
+"""
+--Development for conceptual design and simulation for aircraft--
 
 
-# aircraft type => 'normal', 'Blended Wing Body', 'drone', 'Hyper sonic', 'propeller'
-# aircraft shape's components => ['main wing', 'vertical wing', 'horizontal wing', 'engine', 'nacelle', 'winglet',
-# 'cabin fuselage', 'cockpit fuselage', 'after cabin fuselage', 'leg']
-# 1. normal: ['main wing', 'vertical wing', 'horizontal wing', 'engine', 'nacelle', 'winglet', 'cabin fuselage',
-# 'cockpit fuselage', 'after cabin fuselage', 'leg']
-# 2. BWB: normal(without 'vertical wing' & 'horizontal wing') + different shape definition
-# 3. drone(UAV): ['main wing', 'engine', 'propeller', 'cockpit fuselage', 'cabin fuselage']
-# 4. Hyper sonic: normal(without 'horizontal wing') + different wing shape + different aerodynamic performance modules
-# 5. propeller: normal + different shape definition
+ **Aircraft**
+
+    1. Fuel type
+           'jet', 'electric', 'hybrid', 'hydrogen'
+
+    2. Aircraft type
+          'normal', 'Blended Wing Body', 'drone', 'Hyper sonic', 'propeller'
+
+    3. Aircraft shape's components
+          ['main wing', 'vertical wing', 'horizontal wing', 'engine', 'nacelle', 'winglet', 'cabin fuselage', 'cockpit fuselage', 'after cabin fuselage', 'leg']
+
+    4. Aircraft Type and Component
+        1. normal
+                ['main wing', 'vertical wing', 'horizontal wing', 'engine', 'nacelle', 'winglet', 'cabin fuselage',
+                'cockpit fuselage', 'after cabin fuselage', 'leg']
+
+        2. BWB
+                normal(without 'vertical wing' & 'horizontal wing') + different shape definition
+
+        3. drone(UAV)
+                ['main wing', 'engine', 'propeller', 'cockpit fuselage', 'cabin fuselage']
+
+        4. Hyper sonic
+                normal(without 'horizontal wing') + different wing shape + different aerodynamic performance modules
+
+        5. propeller
+                normal + different shape definition
+
+    5. wing type(airfoil)
+         cross section(NACA 6), horizontal section(Trapezoid,Delta,Diamond,rectangle)
+
+**Engine**
+
+    1. Engine type
+         'turbojet', 'turbofan', 'turboprop'(propeller),'turboelectric', 'partialelectric', 'allelectric', 'serieshybrid', 'partialhybrid', 'parallelhybrid'
+
+         optional engine version: BLI(Boundary Layer Ingestion)
+
+    2. Engine components
+        1. electric fan
+               [inlet, fan, nozzle, jet]
+
+        2. turbofan
+               [inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet]
+
+        3. turbojet
+               [inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet]
+
+        4. turboprop(propeller)
+               [inlet, lpc, hpc, cc, hot, hptcool, lpt, lptcool, coreout, nozzle, jet]
+
+        5. turboelectric
+               concept => (turboshaft => electric fan)
+
+               [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
+               electric fan: eleinlet, elefan, elenozzle, elejet]
+
+        6. partialelectric
+               concept (turbofan => electric fan)
+
+               [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet,
+               electric fan: eleinlet, elefan, elenozzle, elejet]
+
+        7. allelectric
+               [eleinlet, elefan, elenozzle, elejet] + [battery](electricity, fuel cell etc)
+
+        8. serieshybrid
+               concept => (turboshaft + battery => electric fan)
+
+               [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
+               [battery], electric fan: eleinlet, elefan, elenozzle, elejet]
+
+        9. partialhybrid
+               concept => (turbofan + battery => electric fan)
+               [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
+               [battery], electric fan: eleinlet, elefan, elenozzle, elejet]
+
+        10. parallel hybrid
+               concept => (battery => turbofan)
+               [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet], [battery]
 
 
-# wing type(airfoil) => cross section(NACA 6), horizontal section(Trapezoid,Delta,Diamond,rectangle)
+**Initial parameters**
+
+     aircraft shape parameters + aircraft configuration parameters + aircraft aerodynamic parameters + engine parameters + engine configuration parameters
+
+     1. Aircraft shape parameters
+             Main wing
+                (wing width, wing thickness, the ratio of thickness and wing span, aspect ratio)
+
+             Vertical wing
+                 (wing width, wing thickness, the ratio of thickness and wing span, aspect ratio)
+
+             Horizontal wing
+                 (wing width, wing thickness, the ratio of thickness and wing span, aspect ratio)}
+
+             Fuselage shape
+                 {'cabin':(length, width), 'cockpit': (length, width), 'after cabin': (length, width)}
+
+             Nacelle
+                 include engine components parameters
+
+     2. Aircraft configuration parameters
+             1. wing mounting positions
+                  3D coordinates (x, y, z)
+
+             2. engine mounting positions
+                  3D coordinates (x, y, z)
+
+             3. aircraft other required args
+                  aircraft weight model
+
+             4. passenger number
+                  the number of boarding
+
+             5. cargo weight
+                  the weight of total cargo
 
 
-# engine type => 'turbojet', 'turbofan', 'turboprop'(propeller),'turboelectric', 'partialelectric', 'allelectric',
-# 'serieshybrid', 'partialhybrid', 'parallelhybrid'
-# optional engine version => BLI(Boundary Layer Ingestion)
-# engine components
-# 1. electric fan: [inlet, fan, nozzle, jet]
-# 2. turbofan: [inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet]
-# 3. turbojet: [inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet]
-# 4. turboprop(propeller): [inlet, lpc, hpc, cc, hot, hptcool, lpt, lptcool, coreout, nozzle, jet]
-# 5. turboelectric(turboshaft => electric fan): [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
-# electric fan: eleinlet, elefan, elenozzle, elejet]
-# 6. partialelectric(turbofan => electric fan): [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet,
-# electric fan: eleinlet, elefan, elenozzle, elejet]
-# 7. allelectric: [eleinlet, elefan, elenozzle, elejet] + [battery](electricity, fuel cell etc)
-# 8. serieshybrid(turboshaft + battery => electric fan):[core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
-# [battery], electric fan: eleinlet, elefan, elenozzle, elejet]
-# 9. partialhybrid(turbofan + battery => electric fan): [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
-# [battery], electric fan: eleinlet, elefan, elenozzle, elejet]
-# 10. parallel hybrid(battery => turbofan): [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet], [battery]
+             6. cruise altitude
+                  the height at cruise point
+
+             7. cruise mach
+                  the mach number at cruise point
 
 
-# Initial parameters
-# aircraft shape parameters + aircraft configuration parameters + aircraft aerodynamic parameters + engine parameters + engine configuration parameters
-# 1. aircraft shape parameters
-#    wing shape = {'main wing':(wing width, wing thickness, the ratio of thickness and wing span, aspect ratio),
-#    'vertical wing':(wing width, wing thickness, the ratio of thickness and wing span, aspect ratio),
-#    'horizontal wing':(wing width, wing thickness, the ratio of thickness and wing span, aspect ratio)},
-#    fuselage shape = {'cabin':(length, width), 'cockpit': (length, width), 'after cabin': (length, width)}
-#    nacelle = include engine components parameters
-# 2. aircraft configuration parameters
-#    wing mounting positions(x, y, z)
-#    engine mounting positions(x, y, z)
-#    aircraft other required args(aircraft weight model)
-#    passenger number, cargo weight, cruise height, cruise mach
 # 3. aircraft aerodynamic parameters
 #    L/D(?), AOA(attack of angle)
 # 4. engine parameters
@@ -157,6 +236,7 @@
 # 2. set the city obstacle or landmark
 # 3. apply RL(Reinforcement Learning) or SLAM(Simultaneous Localization and Mapping) in order to find the better path
 # 4. plot the explored path at graph
+"""
 
 
 
