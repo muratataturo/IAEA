@@ -232,7 +232,7 @@
 </dl>
 </li>
 <li><dl class="simple">
-<dt>turbofan</dt><dd><p>[inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet]</p>
+<dt>turbofan</dt><dd><p>[inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fan_nozzle, fan_jet]</p>
 </dd>
 </dl>
 </li>
@@ -249,26 +249,27 @@
 <li><dl>
 <dt>turboelectric</dt><dd><p>concept =&gt; (turboshaft =&gt; electric fan)</p>
 <p>[core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
-electric fan: eleinlet, elefan, elenozzle, elejet]</p>
+electric fan: fan_electric_inlet, fan_electric, fan_electric_nozzle, fan_electric_jet]</p>
 </dd>
 </dl>
 </li>
 <li><dl>
 <dt>partialelectric</dt><dd><p>concept (turbofan =&gt; electric fan)</p>
-<p>[core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet,
-electric fan: eleinlet, elefan, elenozzle, elejet]</p>
+<p>[core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fan_nozzle, fan_jet,
+electric fan: fan_electric_inlet, fan_electric, fan_electric_nozzle, fan_electric_jet]</p>
 </dd>
 </dl>
 </li>
 <li><dl class="simple">
-<dt>allelectric</dt><dd><p>[eleinlet, elefan, elenozzle, elejet] + [battery](electricity, fuel cell etc)</p>
+<dt>allelectric</dt><dd><p>[fan_electric_inlet, fan_electric, fan_electric_nozzle, fan_electric_jet] +
+[battery](electricity, fuel cell etc)</p>
 </dd>
 </dl>
 </li>
 <li><dl>
 <dt>serieshybrid</dt><dd><p>concept =&gt; (turboshaft + battery =&gt; electric fan)</p>
 <p>[core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
-[battery], electric fan: eleinlet, elefan, elenozzle, elejet]</p>
+[battery], electric fan: fan_electric_inlet, fan_electric, fan_electric_nozzle, fan_electric_jet]</p>
 </dd>
 </dl>
 </li>
@@ -281,7 +282,8 @@ electric fan: eleinlet, elefan, elenozzle, elejet]</p>
 </li>
 <li><dl class="simple">
 <dt>parallel hybrid</dt><dd><p>concept =&gt; (battery =&gt; turbofan)
-[core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet], [battery]</p>
+[core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fan_nozzle, fan_jet],
+[battery]</p>
 </dd>
 </dl>
 </li>
@@ -400,6 +402,8 @@ electric fan: eleinlet, elefan, elenozzle, elejet]</p>
 </dd>
 <dt>LFx</dt><dd><p>stage load factor of each compressor or turbine</p>
 </dd>
+<dt>cool_airx</dt><dd><p>the distribution of cool air for high and low pressure turbine</p>
+</dd>
 </dl>
 </dd>
 </dl>
@@ -434,14 +438,77 @@ electric fan: eleinlet, elefan, elenozzle, elejet]</p>
 <p>return params =&gt; numpy array  * Initialize 0 array</p>
 </dd>
 <dt>Aircraft performance class(aircraft_performance.py)</dt><dd><p>to compute aerodynamic performance and weight</p>
-<dl class="simple">
-<dt>aircraft aerodynamic performance class()</dt><dd><p>()
-calculate L/D at cruise</p>
+<dl>
+<dt>aircraft aerodynamic performance class(aerodynamic_performance.py)</dt><dd><p>calculate L/D at cruise</p>
 </dd>
-<dt>aircraft weight class()</dt><dd><p>()
-calculate overall weight
-return weight results =&gt; numpy array   * Initialize 0 array
-component class()</p>
+<dt>aircraft weight class(aircraft_weight.py)</dt><dd><p>calculate overall weight
+return weight results =&gt; numpy array   * Initialize 0 array</p>
+</dd>
+<dt>special aircraft shape class()</dt><dd><p>Drone class(drone.py)</p>
+<p>Blended Wing Body class(bwb.py)</p>
+<p>Hyper sonic class(hyper_sonic.py)</p>
+<p>Propeller class(propeller.py)</p>
+</dd>
+<dt>component class(aircraft_component.py)</dt><dd><dl>
+<dt>base component class format()</dt><dd><dl>
+<dt>__init__(aircraft_params_class)</dt><dd><p>weight = 0</p>
+<p>aircraft_params_class</p>
+<p>(needed?)</p>
+<p>(x, y, z) =&gt; list</p>
+<p>(join equipment index) =&gt; list</p>
+</dd>
+<dt>run()()</dt><dd><p>feedforward()</p>
+<p>return None</p>
+</dd>
+</dl>
+</dd>
+<dt>1: MainWing class()</dt><dd><p>keep the main wing weight or params and calculate weight</p>
+</dd>
+<dt>2: Horizontal tail()</dt><dd><p>keep the horizontal tail wing weight or params and calculate weight</p>
+</dd>
+<dt>3: Vertical tail()</dt><dd><p>keep the vertical tail wing weight or params and calculate weight</p>
+</dd>
+<dt>4: Fuselage()</dt><dd><p>keep the fuselage weight or params and calculate weight</p>
+</dd>
+<dt>5: Main Landing Gear()</dt><dd><p>keep the main landing gear’s weight or params and calculate weight</p>
+</dd>
+<dt>6: Nose landing Gear()</dt><dd><p>keep the nose landing gear’s weight or params and calculate weight</p>
+</dd>
+<dt>7: Nacelle()</dt><dd><p>keep the nacelle’s weight or params and calculate weight</p>
+</dd>
+<dt>8: Engine Control()</dt><dd><p>keep the engine controller’s weight or params and calculate weight</p>
+</dd>
+<dt>9: Starter()</dt><dd><p>keep the starter’s weight or params and calculate weight</p>
+</dd>
+<dt>10: Fuel System()</dt><dd><p>keep the fuel system’s weight or params and calculate weight</p>
+</dd>
+<dt>11: Flight Control()</dt><dd><p>keep the flight controller’s weight or params and calculate weight</p>
+</dd>
+<dt>12: APU()</dt><dd><p>keep the APU weight or params and calculate weight</p>
+</dd>
+<dt>13: Instrument()</dt><dd><p>keep the instrument’s weight or params and calculate weight</p>
+</dd>
+<dt>14: Hydraulics()</dt><dd><p>keep the hydraulics’s weight or params and calculate weight</p>
+</dd>
+<dt>15: Electric()</dt><dd><p>keep the electricity weight or params and calculate weight
+(maybe this class is not needed for electric aircraft)</p>
+</dd>
+<dt>16: Avionic()</dt><dd><p>keep the avionic’s weight or params and calculate weight</p>
+</dd>
+<dt>17: furnishing()</dt><dd><p>keep the furnishing’s weight or params and calculate weight</p>
+</dd>
+<dt>18: Airconditioner()</dt><dd><p>keep the air conditioner’s weight or params and calculate weight</p>
+</dd>
+<dt>19: Anti ice()</dt><dd><p>keep the anti ice’s weight or params and calculate weight</p>
+</dd>
+<dt>20: Handling Gear()</dt><dd><p>keep the handling gear’s weight or params and calculate weight</p>
+</dd>
+<dt>21: Engine()</dt><dd><p>keep the engine weight but this class is not needed and designated
+engine_weight_class().result</p>
+</dd>
+<dt>22: Passenger Equip()</dt><dd><p>keep the main passenger equipment’s weight or params and calculate weight</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd>
@@ -450,21 +517,103 @@ return params =&gt; numpy array   * Initialize 0 array</p>
 </dd>
 <dt>Engine performance class(engine_performance.py)</dt><dd><p>to compute thermodynamic performance and weight</p>
 <dl>
-<dt>engine thermodynamic class(engine_thermo.py)</dt><dd><p>calculate SFC and Thrust at cruise and takeoff</p>
-<dl class="simple">
-<dt>design point class()</dt><dd><p>return thermodynamic results at design point =&gt; numpy array</p>
+<dt>engine thermodynamic class(engine_thermodynamic.py)</dt><dd><p>calculate SFC and Thrust at cruise and takeoff</p>
+<dl>
+<dt>design point class(engine_design_point.py)</dt><dd><p>return thermodynamic results at design point =&gt; numpy array</p>
 </dd>
-<dt>off design point class()</dt><dd><p>return thermodynamic results at off design point =&gt; numpy array</p>
+<dt>component class(engine_component_design_point.py)</dt><dd><dl>
+<dt>base component class()</dt><dd><dl>
+<dt>__init__()</dt><dd><p>efficiency: type(numpy array or list(vector))</p>
+<p>component coefficient: type(numpy array or list(vector))</p>
+<p>previous physical value(Pressure, Temperature, density, pressure ratio, temperature ratio etc): type(numpy array or list(vector))</p>
+<p>current physical value: type(numpy array or list(vector))</p>
+</dd>
+<dt>run()</dt><dd><p>feedforward(calculate current physical value)</p>
+<p>save the result at current component</p>
+<p>return None</p>
+</dd>
+</dl>
+</dd>
+<dt>0:Inlet()</dt><dd><p>calculate physical value at inlet</p>
+</dd>
+<dt>10:Fan()</dt><dd><p>calculate physical value at fan</p>
+</dd>
+<dt>20:LPC()</dt><dd><p>calculate physical value at lpc</p>
+</dd>
+<dt>25:HPC()</dt><dd><p>calculate physical value at hpc</p>
+</dd>
+<dt>30:CC()</dt><dd><p>calculate physical value at cc</p>
+</dd>
+<dt>40:HPT()</dt><dd><p>calculate physical value at hpt</p>
+</dd>
+<dt>41:HPTCool()</dt><dd><p>calculate physical value at hptcool</p>
+</dd>
+<dt>45:LPT()</dt><dd><p>calculate physical value at lpt</p>
+</dd>
+<dt>46:LPTCool()</dt><dd><p>calculate physical value at lptcool</p>
+</dd>
+<dt>50:CoreOut()</dt><dd><p>calculate physical value at core outlet</p>
+</dd>
+<dt>70:AfterBurner()</dt><dd><p>calculate physical value at after burner</p>
+</dd>
+<dt>80:Nozzle()</dt><dd><p>calculate physical value at nozzle</p>
+</dd>
+<dt>90:Jet()</dt><dd><p>calculate physical value at jet</p>
+</dd>
+<dt>18:FanNozzle()</dt><dd><p>calculate physical value at fan nozzle</p>
+</dd>
+<dt>19:FanJet()</dt><dd><p>calculate physical value at fan jet</p>
+</dd>
+<dt>100:FanElectricInlet()</dt><dd><p>calculate physical value at electric fan inlet</p>
+</dd>
+<dt>110:FanElectric()</dt><dd><p>calculate physical value at electric fan</p>
+</dd>
+<dt>118:FanElectricNozzle()</dt><dd><p>calculate physical value at electric fan nozzle</p>
+</dd>
+<dt>119:FanElectricJet()</dt><dd><p>calculate physical value at electric jet</p>
+</dd>
+</dl>
+</dd>
+<dt>off design point class(engine_off_design_point.py)</dt><dd><blockquote>
+<div><p>return thermodynamic results at off design point =&gt; numpy array</p>
+</div></blockquote>
+<dl class="simple">
+<dt>component class(engine_component_design_point.py)</dt><dd><p>0:Inlet()
+10:Fan()
+20:LPC()
+25:HPC()
+30:CC()
+40:HPT()
+41:HPTCool()
+45:LPT()
+46:LPTCool()
+50:CoreOut()
+70:AfterBurner()
+80:Nozzle()
+90:Jet()
+18:FanNozzle()
+19:FanJet()
+100:FanElectricInlet()
+110:FanElectric()
+118:FanElectricNozzle()
+119:FanElectricJet()</p>
+</dd>
+</dl>
 </dd>
 </dl>
 </dd>
 <dt>engine weight class(engine_weight.py)</dt><dd><p>calculate engine weight(core weight, electric fan weight, electricity weight)</p>
 <dl>
-<dt>core weight class()</dt><dd><p>return core weight results =&gt; numpy array  * Initialize 0 array</p>
+<dt>core weight class(core_engine_weight.py)</dt><dd><p>return core weight results =&gt; numpy array  * Initialize 0 array</p>
 </dd>
-<dt>electric fan weight class()</dt><dd><p>return electric fan weight results =&gt; numpy array  * Initialize 0 array</p>
+<dt>electric fan weight class(electric_fan_weight.py)</dt><dd><p>return electric fan weight results =&gt; numpy array  * Initialize 0 array</p>
 </dd>
-<dt>electricity weight class()</dt><dd><p>(battery weight, fuel cell weight, biological fuel weight)</p>
+<dt>electricity weight class(electricity_weight.py)</dt><dd><dl>
+<dt>special fuel engine class()</dt><dd><p>battery class()</p>
+<p>fuel cell class()</p>
+<p>biological fuel class()</p>
+</dd>
+</dl>
 <p>return electricity weight =&gt; numpy array  * Initialize 0 array</p>
 </dd>
 </dl>
@@ -497,11 +646,15 @@ main function: class object.optimize()</p>
 </dd>
 </dl>
 <p><strong>Analysis module</strong></p>
-<p>plot contour</p>
+<blockquote>
+<div><p>plot contour</p>
 <p>plot result by jupyter notebook</p>
+</div></blockquote>
 <p><strong>Self driving module</strong></p>
-<p>1.construct the aircraft or drone</p>
+<blockquote>
+<div><p>1.construct the aircraft or drone</p>
 <p>2.SLAM or Reinforcement Learning</p>
+</div></blockquote>
 <p><strong>UseCase for IAEA</strong></p>
 <dl class="simple">
 <dt>Implementation of aircraft design</dt><dd><ol class="arabic simple" start="0">

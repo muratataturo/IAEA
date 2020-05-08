@@ -96,15 +96,17 @@ def construct_engine_data(args):
 
 class DataDriven(object):
     """
-    --Attributes--
-    ***aircraft data***
-    aircraft name: type(string)
-    passenger number: the number of passenger on boarding
-                      type(int)
-    overall length: the overall length of aircraft's fuselage[m]
-                    type(float)
-    width: wing width[m], formally represent "b"
-           type(float)
+    Params:
+        aircraft name:
+             type(string)
+        passenger number:
+             the number of passenger on boarding
+             type(int)
+        overall length:
+             the overall length of aircraft's fuselage[m]
+             type(float)
+        width: wing width[m], formally represent "b"
+               type(float)
     height: aircraft height[m]
            type(float)
     fuselage width: the width of fuselage[m]
@@ -184,8 +186,8 @@ class DataDriven(object):
                                'ratio_of_thrust_and_weight']
 
         # aircraft and engine data path
-        self.aircraft_data_path = 'aircraft.csv'
-        self.engine_data_path = 'engine.csv'
+        self.aircraft_data_path = './DataBase/aircraft.csv'
+        self.engine_data_path = './DataBase/engine.csv'
 
         # set the dataframe
         # aircraft
@@ -203,7 +205,7 @@ if __name__ == '__main__':
 
     # add arguments
     # aircraft
-    parser.add_argument('--aircraft_name', default='A321', type=str)
+    parser.add_argument('--aircraft_name', default='A322', type=str)
     parser.add_argument('--passenger_number', default=150, type=int)
     parser.add_argument('--overall_length', default=37.57, type=float)
     parser.add_argument('--width', default=34.10, type=float)
@@ -226,7 +228,7 @@ if __name__ == '__main__':
     parser.add_argument('--horizontal_wing_width', default=12.45, type=float)
 
     # engine
-    parser.add_argument('--engine_name', default='CFM56-A', type=str)
+    parser.add_argument('--engine_name', default='CFM56-B', type=str)
     parser.add_argument('--takeoff_thrust', default=120000, type=float)
     parser.add_argument('--cruise_thrust', default=21000, type=float)
     parser.add_argument('--BPR', default=5.7, type=float)

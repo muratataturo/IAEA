@@ -1,0 +1,444 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>data_driven &mdash; IAEA 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> IAEA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">IAEA</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">IAEA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>data_driven</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for data_driven</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">argparse</span>
+
+<span class="c1"># aircraft data</span>
+<span class="c1"># name, passenger number, overall length[m], width[m], height[m], fuselage width[m], fuselage height[m],</span>
+<span class="c1"># max takeoff weight[kg], max landing weight[kg], max zero fuel weight[kg], cargo volume[m^3], cruise mach,</span>
+<span class="c1"># cruise altitude[m], cruise range[km], lift by drag(L/D), wing area[m^2], aspect ratio(AR), retreat angle,</span>
+<span class="c1"># ratio of thickness and chord, vertical wing width[m], horizontal wing width[m]</span>
+
+<span class="c1"># engine data</span>
+<span class="c1"># name, takeoff thrust[N], cruise thrust[N], BPR, OPR, FPR, TIT, engine weight[kg], fuel type, fan stage number,</span>
+<span class="c1"># lpc stage number, hpc stage number, hpt stage number, lpt stage number, fan stage load factor,</span>
+<span class="c1"># lpc stage load factor, hpc stage load factor, hpt stage load factor, lpt stage load factor, fan diameter[m],</span>
+<span class="c1"># engine length[m], ratio of thrust and weight</span>
+
+<div class="viewcode-block" id="replace_database"><a class="viewcode-back" href="../data_driven.html#data_driven.replace_database">[docs]</a><span class="k">def</span> <span class="nf">replace_database</span><span class="p">(</span><span class="n">name</span><span class="p">,</span> <span class="n">data</span><span class="p">,</span> <span class="n">path</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    change the contents of database</span>
+
+<span class="sd">    :param name: string, ex) &quot;A320&quot;, &quot;CFM56&quot;</span>
+<span class="sd">    :param data: list, the set of necessary variables for constructing data base</span>
+<span class="sd">    :param path: string, path of data base</span>
+<span class="sd">    :return: None</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">path</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">data</span>
+    <span class="n">df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">path</span><span class="p">)</span></div>
+
+
+<div class="viewcode-block" id="construct_aircraft_data"><a class="viewcode-back" href="../data_driven.html#data_driven.construct_aircraft_data">[docs]</a><span class="k">def</span> <span class="nf">construct_aircraft_data</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create the set of aircraft data</span>
+<span class="sd">    :param args: parser argument class</span>
+<span class="sd">    :return: aircraft_name(string), aircraft_data(list)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+    <span class="n">aircraft_name</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">aircraft_name</span>
+    <span class="n">aircraft_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">passenger_number</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">overall_length</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">width</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">height</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">fuselage_width</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">fuselage_height</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">max_takeoff_weight</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">max_landing_weight</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">max_zero_fuel_weight</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">cargo_volume</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">cruise_mach</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">cruise_altitude</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">cruise_range</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">lift_by_drag</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">wing_area</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">aspect_ratio</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">rectangle_angle</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">ratio_of_thickness_and_chord</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">vertical_wing_width</span><span class="p">,</span>
+                     <span class="n">args</span><span class="o">.</span><span class="n">horizontal_wing_width</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">aircraft_name</span><span class="p">,</span> <span class="n">aircraft_data</span></div>
+
+
+<div class="viewcode-block" id="construct_engine_data"><a class="viewcode-back" href="../data_driven.html#data_driven.construct_engine_data">[docs]</a><span class="k">def</span> <span class="nf">construct_engine_data</span><span class="p">(</span><span class="n">args</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    create the set of engine data</span>
+
+<span class="sd">    :param args: parser argument class</span>
+<span class="sd">    :return: engine_name(string), engine_data(list)</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="n">engine_name</span> <span class="o">=</span> <span class="n">args</span><span class="o">.</span><span class="n">engine_name</span>
+
+    <span class="n">engine_data</span> <span class="o">=</span> <span class="p">[</span><span class="n">args</span><span class="o">.</span><span class="n">takeoff_thrust</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">cruise_thrust</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">BPR</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">OPR</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">FPR</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">TIT</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">engine_weight</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">fuel_type</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">fan_stage_number</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">lpc_stage_number</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">hpc_stage_number</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">hpt_stage_number</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">lpt_stage_number</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">lpc_stage_load_factor</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">hpc_stage_load_factor</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">hpt_stage_load_factor</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">lpt_stage_load_factor</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">fan_diameter</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">engine_length</span><span class="p">,</span>
+                   <span class="n">args</span><span class="o">.</span><span class="n">ratio_of_thrust_and_weight</span><span class="p">]</span>
+
+    <span class="k">return</span> <span class="n">engine_name</span><span class="p">,</span> <span class="n">engine_data</span></div>
+
+
+
+<div class="viewcode-block" id="DataDriven"><a class="viewcode-back" href="../data_driven.html#data_driven.DataDriven">[docs]</a><span class="k">class</span> <span class="nc">DataDriven</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Params:</span>
+<span class="sd">        aircraft name</span>
+<span class="sd">             string</span>
+<span class="sd">        passenger number: the number of passenger on boarding</span>
+<span class="sd">                          type(int)</span>
+<span class="sd">          overall length: the overall length of aircraft&#39;s fuselage[m]</span>
+<span class="sd">                        type(float)</span>
+<span class="sd">        width: wing width[m], formally represent &quot;b&quot;</span>
+<span class="sd">               type(float)</span>
+<span class="sd">    height: aircraft height[m]</span>
+<span class="sd">           type(float)</span>
+<span class="sd">    fuselage width: the width of fuselage[m]</span>
+<span class="sd">                    type(float)</span>
+<span class="sd">    fuselage height: the height of fuselage[m]</span>
+<span class="sd">                     type(float)</span>
+<span class="sd">    max takeoff weight: max takeoff weight[kg]</span>
+<span class="sd">                        type(float)</span>
+<span class="sd">    max landing weight: max landing weight[kg]</span>
+<span class="sd">                        type(float)</span>
+<span class="sd">    max zero fuel weight: the weight without fuel weight[kg]</span>
+<span class="sd">                          type(float)</span>
+<span class="sd">    cargo volume: the volume of cargo shelter[m^3]</span>
+<span class="sd">                  type(float)</span>
+<span class="sd">    cruise mach: mach number at cruise phase (no dimension)</span>
+<span class="sd">                 type(float)</span>
+<span class="sd">    cruise altitude: altitude at cruise phase[m]</span>
+<span class="sd">                     type(float)</span>
+<span class="sd">    cruise range: max cruise range[km]</span>
+<span class="sd">                  type(float)</span>
+<span class="sd">    lift by drag: lift by drag at cruise point, in particular, the ratio of thrust and total weight is equal to L/D</span>
+<span class="sd">                  type(float)</span>
+<span class="sd">    wing area: Area of wing, which formally represents &quot;S&quot;, [m^2]</span>
+<span class="sd">    aspect ratio: AR = b ** 2 / S</span>
+<span class="sd">    retreat angle: retreat angle, which formally upper delta</span>
+<span class="sd">    ratio of thickness and chord: t / c(t = thickness, c= chord)</span>
+<span class="sd">    vertical wing width: vertical wing width[m], formally represents bv</span>
+<span class="sd">    horizontal wing width: horizontal wing width[m], formally represents bh</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">args</span><span class="p">):</span>
+
+        <span class="c1"># the content of aircraft data base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;aircraft_name&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;passenger_number&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;overall_length&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;width&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;height&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;fuselage_width&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;fuselage_height&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;max_takeoff_weight&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;max_landing_weight&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;max_zero_fuel_weight&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;cargo_volume&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;cruise_mach&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;cruise_altitude&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;cruise_range&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;lift_by_drag&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;wing_area&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;aspect_ratio&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;rectangle_angle&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;ratio_of_thickness_and_chord&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;vertical_wing_width&#39;</span><span class="p">,</span>
+                                 <span class="s1">&#39;horizontal_wing_width&#39;</span><span class="p">]</span>
+        <span class="c1"># the content of engine data base</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine_columns</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;engine_name&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;takeoff_thrust&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;cruise_thrust&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;BPR&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;OPR&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;FPR&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;TIT&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;engine_weight&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;fuel_type&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;fan_stage_number&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;lpc_stage_number&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;hpc_stage_number&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;hpt_stage_number&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;lpt_stage_number&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;lpc_stage_load_factor&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;hpc_stage_load_factor&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;hpt_stage_load_factor&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;lpt_stage_load_factor&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;fan_diameter&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;engine_length&#39;</span><span class="p">,</span>
+                               <span class="s1">&#39;ratio_of_thrust_and_weight&#39;</span><span class="p">]</span>
+
+        <span class="c1"># aircraft and engine data path</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_data_path</span> <span class="o">=</span> <span class="s1">&#39;./DataBase/aircraft.csv&#39;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine_data_path</span> <span class="o">=</span> <span class="s1">&#39;./DataBase/engine.csv&#39;</span>
+
+        <span class="c1"># set the dataframe</span>
+        <span class="c1"># aircraft</span>
+        <span class="n">aircraft_name</span><span class="p">,</span> <span class="n">aircraft_data</span> <span class="o">=</span> <span class="n">construct_aircraft_data</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">replace_database</span><span class="p">(</span><span class="n">aircraft_name</span><span class="p">,</span> <span class="n">aircraft_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_data_path</span><span class="p">)</span>
+
+        <span class="c1"># engine</span>
+        <span class="n">engine_name</span><span class="p">,</span> <span class="n">engine_data</span> <span class="o">=</span> <span class="n">construct_engine_data</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+        <span class="n">replace_database</span><span class="p">(</span><span class="n">engine_name</span><span class="p">,</span> <span class="n">engine_data</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">engine_data_path</span><span class="p">)</span></div>
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="c1"># build parser class</span>
+    <span class="n">parser</span> <span class="o">=</span> <span class="n">argparse</span><span class="o">.</span><span class="n">ArgumentParser</span><span class="p">()</span>
+
+    <span class="c1"># add arguments</span>
+    <span class="c1"># aircraft</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--aircraft_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;A322&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--passenger_number&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">int</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--overall_length&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">37.57</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--width&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">34.10</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--height&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">11.76</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--fuselage_width&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">3.95</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--fuselage_height&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">4.14</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--max_takeoff_weight&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">78000</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--max_landing_weight&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">66000</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--max_zero_fuel_weight&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">60000</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--cargo_volume&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">37.42</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--cruise_mach&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.82</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--cruise_altitude&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">10668</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--cruise_range&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">6400</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--lift_by_drag&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">17</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--wing_area&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">122.6</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--aspect_ratio&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">9.5</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--rectangle_angle&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">25</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--ratio_of_thickness_and_chord&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.15</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--vertical_wing_width&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">5.87</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--horizontal_wing_width&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">12.45</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># engine</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--engine_name&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;CFM56-B&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--takeoff_thrust&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">120000</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--cruise_thrust&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">21000</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--BPR&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">5.7</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--OPR&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">32.6</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--FPR&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.6</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--TIT&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1400</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--engine_weight&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">2380</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--fuel_type&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="s1">&#39;jet&#39;</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">str</span><span class="p">,</span> <span class="n">help</span><span class="o">=</span><span class="s1">&#39;jet, hydrogen, bio, solar&#39;</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--fan_stage_number&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--lpc_stage_number&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">3</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--hpc_stage_number&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">9</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--hpt_stage_number&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--lpt_stage_number&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--lpc_stage_load_factor&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.17</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--hpc_stage_load_factor&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">0.3</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--hpt_stage_load_factor&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--lpt_stage_load_factor&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.2</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--fan_diameter&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">1.74</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--engine_length&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">2.51</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+    <span class="n">parser</span><span class="o">.</span><span class="n">add_argument</span><span class="p">(</span><span class="s1">&#39;--ratio_of_thrust_and_weight&#39;</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="mf">3.7</span><span class="p">,</span> <span class="nb">type</span><span class="o">=</span><span class="nb">float</span><span class="p">)</span>
+
+    <span class="c1"># build argument class</span>
+    <span class="n">args</span> <span class="o">=</span> <span class="n">parser</span><span class="o">.</span><span class="n">parse_args</span><span class="p">()</span>
+
+    <span class="c1"># build data driven class</span>
+    <span class="n">ddc</span> <span class="o">=</span> <span class="n">DataDriven</span><span class="p">(</span><span class="n">args</span><span class="p">)</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, tatsuro murata
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

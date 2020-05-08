@@ -45,7 +45,7 @@
                [inlet, fan, nozzle, jet]
 
         2. turbofan
-               [inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet]
+               [inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fan_nozzle, fan_jet]
 
         3. turbojet
                [inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet]
@@ -57,22 +57,23 @@
                concept => (turboshaft => electric fan)
 
                [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
-               electric fan: eleinlet, elefan, elenozzle, elejet]
+               electric fan: fan_electric_inlet, fan_electric, fan_electric_nozzle, fan_electric_jet]
 
         6. partialelectric
                concept (turbofan => electric fan)
 
-               [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet,
-               electric fan: eleinlet, elefan, elenozzle, elejet]
+               [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fan_nozzle, fan_jet,
+               electric fan: fan_electric_inlet, fan_electric, fan_electric_nozzle, fan_electric_jet]
 
         7. allelectric
-               [eleinlet, elefan, elenozzle, elejet] + [battery](electricity, fuel cell etc)
+               [fan_electric_inlet, fan_electric, fan_electric_nozzle, fan_electric_jet] +
+               [battery](electricity, fuel cell etc)
 
         8. serieshybrid
                concept => (turboshaft + battery => electric fan)
 
                [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet,
-               [battery], electric fan: eleinlet, elefan, elenozzle, elejet]
+               [battery], electric fan: fan_electric_inlet, fan_electric, fan_electric_nozzle, fan_electric_jet]
 
         9. partialhybrid
                concept => (turbofan + battery => electric fan)
@@ -81,7 +82,8 @@
 
         10. parallel hybrid
                concept => (battery => turbofan)
-               [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fannozzle, fanjet], [battery]
+               [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fan_nozzle, fan_jet],
+               [battery]
 
 
 **Initial parameters**
@@ -185,6 +187,9 @@
          LFx
            stage load factor of each compressor or turbine
 
+         cool_airx
+           the distribution of cool air for high and low pressure turbine
+
 
 
 
@@ -230,15 +235,111 @@ Aircraft parameters class(aircraft_params.py)
 Aircraft performance class(aircraft_performance.py)
     to compute aerodynamic performance and weight
 
-    aircraft aerodynamic performance class()
-      ()
+    aircraft aerodynamic performance class(aerodynamic_performance.py)
       calculate L/D at cruise
 
-    aircraft weight class()
-      ()
+    aircraft weight class(aircraft_weight.py)
       calculate overall weight
       return weight results => numpy array   * Initialize 0 array
-      component class()
+
+    special aircraft shape class()
+      Drone class(drone.py)
+
+      Blended Wing Body class(bwb.py)
+
+      Hyper sonic class(hyper_sonic.py)
+
+      Propeller class(propeller.py)
+
+
+
+    component class(aircraft_component.py)
+        base component class format()
+           __init__(aircraft_params_class)
+            weight = 0
+
+            aircraft_params_class
+
+            (needed?)
+
+            (x, y, z) => list
+
+            (join equipment index) => list
+
+           run()()
+             feedforward()
+
+             return None
+
+
+        1: MainWing class()
+           keep the main wing weight or params and calculate weight
+
+        2: Horizontal tail()
+           keep the horizontal tail wing weight or params and calculate weight
+
+        3: Vertical tail()
+           keep the vertical tail wing weight or params and calculate weight
+
+        4: Fuselage()
+           keep the fuselage weight or params and calculate weight
+
+        5: Main Landing Gear()
+           keep the main landing gear's weight or params and calculate weight
+
+        6: Nose landing Gear()
+           keep the nose landing gear's weight or params and calculate weight
+
+        7: Nacelle()
+           keep the nacelle's weight or params and calculate weight
+
+        8: Engine Control()
+           keep the engine controller's weight or params and calculate weight
+
+        9: Starter()
+           keep the starter's weight or params and calculate weight
+
+        10: Fuel System()
+           keep the fuel system's weight or params and calculate weight
+
+        11: Flight Control()
+           keep the flight controller's weight or params and calculate weight
+
+        12: APU()
+           keep the APU weight or params and calculate weight
+
+        13: Instrument()
+           keep the instrument's weight or params and calculate weight
+
+        14: Hydraulics()
+           keep the hydraulics's weight or params and calculate weight
+
+        15: Electric()
+           keep the electricity weight or params and calculate weight
+           (maybe this class is not needed for electric aircraft)
+
+        16: Avionic()
+           keep the avionic's weight or params and calculate weight
+
+        17: furnishing()
+           keep the furnishing's weight or params and calculate weight
+
+        18: Airconditioner()
+           keep the air conditioner's weight or params and calculate weight
+
+        19: Anti ice()
+           keep the anti ice's weight or params and calculate weight
+
+        20: Handling Gear()
+           keep the handling gear's weight or params and calculate weight
+
+        21: Engine()
+           keep the engine weight but this class is not needed and designated
+           engine_weight_class().result
+
+        22: Passenger Equip()
+           keep the main passenger equipment's weight or params and calculate weight
+
 
 
 Engine parameters class(engine_params.py)
@@ -248,26 +349,129 @@ Engine parameters class(engine_params.py)
 Engine performance class(engine_performance.py)
    to compute thermodynamic performance and weight
 
-   engine thermodynamic class(engine_thermo.py)
+   engine thermodynamic class(engine_thermodynamic.py)
       calculate SFC and Thrust at cruise and takeoff
 
-      design point class()
+      design point class(engine_design_point.py)
           return thermodynamic results at design point => numpy array
 
-      off design point class()
+      component class(engine_component_design_point.py)
+         base component class()
+           __init__()
+             efficiency: type(numpy array or list(vector))
+
+             component coefficient: type(numpy array or list(vector))
+
+             previous physical value(Pressure, Temperature, density, pressure ratio, temperature ratio etc): type(numpy array or list(vector))
+
+             current physical value: type(numpy array or list(vector))
+
+           run()
+             feedforward(calculate current physical value)
+
+             save the result at current component
+
+             return None
+
+         0:Inlet()
+            calculate physical value at inlet
+
+         10:Fan()
+            calculate physical value at fan
+
+         20:LPC()
+            calculate physical value at lpc
+
+         25:HPC()
+            calculate physical value at hpc
+
+         30:CC()
+            calculate physical value at cc
+
+         40:HPT()
+            calculate physical value at hpt
+
+         41:HPTCool()
+            calculate physical value at hptcool
+
+         45:LPT()
+            calculate physical value at lpt
+
+         46:LPTCool()
+            calculate physical value at lptcool
+
+         50:CoreOut()
+            calculate physical value at core outlet
+
+         70:AfterBurner()
+            calculate physical value at after burner
+
+         80:Nozzle()
+            calculate physical value at nozzle
+
+         90:Jet()
+            calculate physical value at jet
+
+         18:FanNozzle()
+            calculate physical value at fan nozzle
+
+         19:FanJet()
+            calculate physical value at fan jet
+
+         100:FanElectricInlet()
+            calculate physical value at electric fan inlet
+
+         110:FanElectric()
+            calculate physical value at electric fan
+
+         118:FanElectricNozzle()
+            calculate physical value at electric fan nozzle
+
+         119:FanElectricJet()
+            calculate physical value at electric jet
+
+
+
+      off design point class(engine_off_design_point.py)
           return thermodynamic results at off design point => numpy array
+
+        component class(engine_component_design_point.py)
+          0:Inlet()
+          10:Fan()
+          20:LPC()
+          25:HPC()
+          30:CC()
+          40:HPT()
+          41:HPTCool()
+          45:LPT()
+          46:LPTCool()
+          50:CoreOut()
+          70:AfterBurner()
+          80:Nozzle()
+          90:Jet()
+          18:FanNozzle()
+          19:FanJet()
+          100:FanElectricInlet()
+          110:FanElectric()
+          118:FanElectricNozzle()
+          119:FanElectricJet()
 
    engine weight class(engine_weight.py)
       calculate engine weight(core weight, electric fan weight, electricity weight)
 
-      core weight class()
+      core weight class(core_engine_weight.py)
           return core weight results => numpy array  * Initialize 0 array
 
-      electric fan weight class()
+      electric fan weight class(electric_fan_weight.py)
           return electric fan weight results => numpy array  * Initialize 0 array
 
-      electricity weight class()
-          (battery weight, fuel cell weight, biological fuel weight)
+      electricity weight class(electricity_weight.py)
+          special fuel engine class()
+            battery class()
+
+            fuel cell class()
+
+            biological fuel class()
 
           return electricity weight => numpy array  * Initialize 0 array
 
@@ -306,16 +510,16 @@ Evolutionary Algorithm class()
 
 **Analysis module**
 
-plot contour
+    plot contour
 
-plot result by jupyter notebook
+    plot result by jupyter notebook
 
 
 **Self driving module**
 
-1.construct the aircraft or drone
+    1.construct the aircraft or drone
 
-2.SLAM or Reinforcement Learning
+    2.SLAM or Reinforcement Learning
 
 
 **UseCase for IAEA**
