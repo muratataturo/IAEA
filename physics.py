@@ -3,7 +3,7 @@ import math
 
 class Physics(object):
     """
-    Variables
+    --Attributes--
         r0: constant value of geo potential [km], type(double)
         H : reference value of geo potential [km], type(double)
 
@@ -36,7 +36,6 @@ class Physics(object):
         self.dynamic_viscousity()
 
     """
-
 
     def __init__(self, altitude):
         """

@@ -57,7 +57,8 @@
 #    electric efficiency, the ratio of electric power and engine generating power(?), engine component efficiency,
 #    BLI parameters
 # 5. engine configuration parameters
-#    the number of engine, thrust of engine at design point, thrust of engine at off design point
+#    the number of engine, thrust of engine at design point, thrust of engine at off design point,
+#    engine material quality, each stage number of compressor or turbine
 
 
 # the definition of flight path
@@ -114,7 +115,7 @@
 #           return electricity weight => numpy array  * Initialize 0 array
 #            component class()
 # Aircraft view class() => to plot the aircraft's view based on the given parameters
-# Baseline tuning class() => define the scale factor for aircraft design(from public value)
+# Baseline Estimation class() => define the scale factor for aircraft design(from public value)
 # DataBase manage class() => manage the database values
 
 

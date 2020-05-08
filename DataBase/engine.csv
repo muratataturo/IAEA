@@ -1,0 +1,3 @@
+,takeoff_thrust,cruise_thrust,BPR,OPR,FPR,TIT,engine_weight,fuel_type,fan_stage_number,lpc_stage_number,hpc_stage_number,hpt_stage_number,lpt_stage_number,lpc_stage_load_factor,hpc_stage_load_factor,hpt_stage_load_factor,lpt_stage_load_factor,fan_diameter,engine_length,ratio_of_thrust_and_weight
+CFM56,120000,21000,5.7,32.6,1.6,1400,2380,jet,1,3,9,1,4,0.17,0.3,1.2,1.2,1.74,2.51,3.7
+CFM56-A,120000,21000,5.7,32.6,1.6,1400,2380,jet,1,3,9,1,4,0.17,0.3,1.2,1.2,1.74,2.51,3.7
