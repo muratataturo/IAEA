@@ -168,6 +168,17 @@
          BLI parameters
             the relational variables with Boundary Ingestion Layer
 
+            BLI has some options...
+
+            various types of setting positions(ex. upper wing, upper body, down wing, upper fuselage, embedding,...)
+
+
+            two case
+              1.simplify the effect of boundary layer as constant
+
+              2.extend the 2D version's flow field and calculate constant in more complicated and detailed environment
+
+
      5. engine configuration parameters
          Nen
            the number of engine
@@ -250,7 +261,6 @@ Aircraft performance class(aircraft_performance.py)
       Hyper sonic class(hyper_sonic.py)
 
       Propeller class(propeller.py)
-
 
 
     component class(aircraft_component.py)
@@ -351,6 +361,25 @@ Engine performance class(engine_performance.py)
 
    engine thermodynamic class(engine_thermodynamic.py)
       calculate SFC and Thrust at cruise and takeoff
+
+      Note:
+          how to compute SFC and thrust is different between jet engine, propeller engine and electric engine
+          <jet engine>
+              SFC = mf[kg/s] / Thrust
+              Thrust = m[kg/s] * (V jet - V0) + (P jet * A jet - P0 * A inlet)
+
+          <propeller engine>
+              bp = mf / Power
+              power efficiency(eta p)
+              Thrust = m * (V jet - V0) + (P jet * A jet - P0 * A inlet)
+
+          <electric engine>
+              if the power for driving electric fan is supplied with jet engine, the computational method is same as jet engine
+              and electric power can be acquired by multiplying the electric efficiency(conversion rate of heat to electricity)
+
+              if the power for driving electric fan is battery, the computational method is same as propeller engine
+              and electric power have to be calculated in another module, which is specialized in electric performance
+
 
       design point class(engine_design_point.py)
           return thermodynamic results at design point => numpy array
@@ -468,10 +497,21 @@ Engine performance class(engine_performance.py)
       electricity weight class(electricity_weight.py)
           special fuel engine class()
             battery class()
+              calculate electric efficiency and available electric power(W or KW)
+
+              if possible, consider the thermal management
 
             fuel cell class()
+              calculate electric efficiency and available electric power(W or KW)
+
+              if possible, consider the thermal management
 
             biological fuel class()
+              calculate electric efficiency and available electric power(W or KW)
+
+            solar battery class()
+              calculate electric efficiency and available electric power(W or KW)
+
 
           return electricity weight => numpy array  * Initialize 0 array
 
@@ -485,6 +525,9 @@ Baseline Estimation class(estimate_baseline.py)
 
 DataBase manage class(DataBase/database_driven.py)
      to manage the database values
+
+Cost Estimation class(cost_estimate.py)
+     to estimate the flight cost and evaluate the financial effect
 
 
 **Optimization module**
@@ -520,6 +563,124 @@ Evolutionary Algorithm class()
     1.construct the aircraft or drone
 
     2.SLAM or Reinforcement Learning
+
+
+**Engine Performance**
+
+  <off design point>
+     *****Low Pressure Part*****
+
+     0.assume the turnover rate of low pressure compressor compared to that at design point
+
+     1.from inlet to lpc, calculate the physics values of all components
+
+     *****High Pressure Part*****
+
+       2.assume the turnover rate of high pressure compressor compared to that at design point
+
+       3.from hpc to hptcool, calculate their physics values and adjust the turnover rate in order to balance the power of high pressure axis
+
+     ---**End High Pressure Part**---
+
+     4.from lptcool to nozzle, calculate physics values and adjust the turnover rate in order for nozzle area to be equal to that at design point
+
+     ---**End Low Pressure Part**---
+
+     5.finish the engine performance part at off design point and record the turnover rates of high and low pressure compressor
+
+
+
+**Aircraft Performance**
+
+Objective: L/D
+
+  1.static method
+    polar curve fitting
+
+  2.accumulative method
+    compute the lift and the each drag value individually and finally summarize them
+
+    <Lift>
+      L = 0.5 * rou(density) * V(Velocity of aircraft) ** 2 * S(wing area) * CL(lift coefficient)
+
+      * constant
+
+        AR: aspect ratio(given from input parameters)
+
+        beta: sqrt(1 - mach number ** 2)
+
+        eta: 0.95
+
+        F: cross sectional coefficient, 1.07 * (1.0 + (fuselage diameter / wing width)) ** 2
+
+        S_exposed:wing area which is exposed to outer space
+
+        S_ref: wing area
+
+      * subsonic case(Mach number <= 0.9)
+
+        CL = (2 * pi * AR) / (2.0 + sqrt(4.0 + AR ** 2 * beta ** 2 / eta ** 2 * (1.0 + tan(theta * pi / 180)) ** 2 / beta ** 2) * (S_exposed / S_ref) * F
+
+      * mixture of subsonic and hyper sonic case(0.9 <= Mach number <= 1.2)
+
+        CL follows the drag curve and In this module, consider it as quadratic function
+
+        ---Detail---
+
+        slope_of_lift_left = 9.158680497060704
+
+        slope_of_lift_right = 6.030226891555273
+
+        a_coef = -(slope_of_lift_right - slope_of_lift_left) / (0.2 ** 2 - 0.1 ** 2)
+
+        b_coef = slope_of_lift_left + 0.1 ** 2 * a_coef
+
+        slope_of_lift = -a_coef * (current_mach - 1) ** 2 + b_coef
+
+      * hyper sonic case(Mach number >= 1.2)
+
+        CL = 4.0 / beta(constant)
+
+    <Drag>
+      types:
+         D = 0.5 * rou(density) * V(Velocity) ** 2 * S(wing area) * CD(drag coefficient)
+
+         CD = CD0 + CDi
+
+         CD0 = sum(Cf(i) * Swet(i) / Sref)
+
+         <induction drag(CDi)>
+           CDi = CL ** 2 / (pi * e * AR)
+
+           *e is dependent on retreat angle
+
+           e = 1.78 * (1 - 0.045 * AR ** 0.68) - 0.64(retreat angle < 30)
+
+           e = 4.61 * (1.0 - 0.045 * AR ** 0.68) * (np.cos(self.init_airshape_class.theta)) ** 0.15 - 3.1(retreat angle >= 30)
+
+
+         <wing drag(CD0)>
+           1.shape drag
+             necessary parameters: Reynold number, surface roughness, representative length, mach number
+
+             return Cf(shape drag)
+
+           2.misc drag
+             necessary parameters: angle of after fuselage, diameter of after fuselage
+
+             return Cf(misc drag)
+
+           3.L&P drag
+             necessary parameters: the rate which L&P drag occupies in wing drag
+
+             return Cf(L&P drag)
+
+           4.wave drag(hyper sonic case)
+             necessary parameters: fuselage diameter, fuselage length, retreat angle of main wing, mach number
+
+             return Cf(wave drag)
+
+
 
 
 **UseCase for IAEA**
