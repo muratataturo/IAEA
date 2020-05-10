@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Overview: module code &mdash; IAEA 1.0.0 documentation</title>
+  <title>engine_params &mdash; IAEA 1.0.0 documentation</title>
   
 
   
@@ -126,7 +126,9 @@
     
       <li><a href="../index.html">Docs</a> &raquo;</li>
         
-      <li>Overview: module code</li>
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>engine_params</li>
     
     
       <li class="wy-breadcrumbs-aside">
@@ -141,12 +143,48 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <h1>All modules for which code is available</h1>
-<ul><li><a href="aircraft_params.html">aircraft_params</a></li>
-<li><a href="data_driven.html">data_driven</a></li>
-<li><a href="engine_params.html">engine_params</a></li>
-<li><a href="physics.html">physics</a></li>
-</ul>
+  <h1>Source code for engine_params</h1><div class="highlight"><pre>
+<span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+
+
+<div class="viewcode-block" id="EngineParams"><a class="viewcode-back" href="../engine_params.html#engine_params.EngineParams">[docs]</a><span class="k">class</span> <span class="nc">EngineParams</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    --Attributes--</span>
+
+<span class="sd">        engine name:</span>
+<span class="sd">           type(string)</span>
+
+<span class="sd">        engine database path:</span>
+<span class="sd">           type(string), path of aircraft database path</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">engine_name</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine_name</span> <span class="o">=</span> <span class="n">engine_name</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine_database_path</span> <span class="o">=</span> <span class="s2">&quot;./DataBase/engine.csv&quot;</span>
+
+        <span class="n">df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">engine_database_path</span><span class="p">,</span> <span class="n">index_col</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+        <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>  <span class="c1"># extract columns</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">engine_name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>  <span class="c1"># extract numpy array from database</span>
+
+<div class="viewcode-block" id="EngineParams.setting"><a class="viewcode-back" href="../engine_params.html#engine_params.EngineParams.setting">[docs]</a>    <span class="k">def</span> <span class="nf">setting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div></div>
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+
+    <span class="n">engine_name</span> <span class="o">=</span> <span class="s2">&quot;CFM56&quot;</span>
+    <span class="n">ep</span> <span class="o">=</span> <span class="n">EngineParams</span><span class="p">(</span><span class="n">engine_name</span><span class="p">)</span>
+</pre></div>
 
            </div>
            

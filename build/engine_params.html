@@ -8,7 +8,7 @@
   
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   
-  <title>Welcome to IAEA’s documentation! &mdash; IAEA 1.0.0 documentation</title>
+  <title>engine_params module &mdash; IAEA 1.0.0 documentation</title>
   
 
   
@@ -35,7 +35,8 @@
   <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="IAEA" href="modules.html" /> 
+    <link rel="next" title="main module" href="main.html" />
+    <link rel="prev" title="data_driven module" href="data_driven.html" /> 
 </head>
 
 <body class="wy-body-for-nav">
@@ -49,7 +50,7 @@
           
 
           
-            <a href="#" class="icon icon-home"> IAEA
+            <a href="index.html" class="icon icon-home"> IAEA
           
 
           
@@ -80,8 +81,15 @@
             
             
               <p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">IAEA</a></li>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IAEA</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aircraft_params.html">aircraft_params module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_driven.html">data_driven module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">engine_params module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">physics module</a></li>
+</ul>
+</li>
 </ul>
 
             
@@ -96,7 +104,7 @@
       <nav class="wy-nav-top" aria-label="top navigation">
         
           <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
-          <a href="#">IAEA</a>
+          <a href="index.html">IAEA</a>
         
       </nav>
 
@@ -125,15 +133,17 @@
 
   <ul class="wy-breadcrumbs">
     
-      <li><a href="#">Docs</a> &raquo;</li>
+      <li><a href="index.html">Docs</a> &raquo;</li>
         
-      <li>Welcome to IAEA’s documentation!</li>
+          <li><a href="modules.html">IAEA</a> &raquo;</li>
+        
+      <li>engine_params module</li>
     
     
       <li class="wy-breadcrumbs-aside">
         
             
-            <a href="_sources/index.rst.txt" rel="nofollow"> View page source</a>
+            <a href="_sources/engine_params.rst.txt" rel="nofollow"> View page source</a>
           
         
       </li>
@@ -146,29 +156,34 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
             
-  <div class="section" id="welcome-to-iaea-s-documentation">
-<h1>Welcome to IAEA’s documentation!<a class="headerlink" href="#welcome-to-iaea-s-documentation" title="Permalink to this headline">¶</a></h1>
-<div class="toctree-wrapper compound">
-<p class="caption"><span class="caption-text">Contents:</span></p>
-<ul>
-<li class="toctree-l1"><a class="reference internal" href="modules.html">IAEA</a><ul>
-<li class="toctree-l2"><a class="reference internal" href="aircraft_params.html">aircraft_params module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="data_driven.html">data_driven module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="engine_params.html">engine_params module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="main.html">main module</a></li>
-<li class="toctree-l2"><a class="reference internal" href="physics.html">physics module</a></li>
-</ul>
-</li>
-</ul>
-</div>
-</div>
-<div class="section" id="indices-and-tables">
-<h1>Indices and tables<a class="headerlink" href="#indices-and-tables" title="Permalink to this headline">¶</a></h1>
-<ul class="simple">
-<li><p><a class="reference internal" href="genindex.html"><span class="std std-ref">Index</span></a></p></li>
-<li><p><a class="reference internal" href="py-modindex.html"><span class="std std-ref">Module Index</span></a></p></li>
-<li><p><a class="reference internal" href="search.html"><span class="std std-ref">Search Page</span></a></p></li>
-</ul>
+  <div class="section" id="module-engine_params">
+<span id="engine-params-module"></span><h1>engine_params module<a class="headerlink" href="#module-engine_params" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="engine_params.EngineParams">
+<em class="property">class </em><code class="sig-prename descclassname">engine_params.</code><code class="sig-name descname">EngineParams</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">engine_name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/engine_params.html#EngineParams"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine_params.EngineParams" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="option-list">
+<dt><kbd><span class="option">--Attributes--</span></kbd></dt>
+<dd><dl class="simple">
+<dt>engine name:</dt><dd><p>type(string)</p>
+</dd>
+<dt>engine database path:</dt><dd><p>type(string), path of aircraft database path</p>
+</dd>
+</dl>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="engine_params.EngineParams.setting">
+<code class="sig-name descname">setting</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/engine_params.html#EngineParams.setting"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#engine_params.EngineParams.setting" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
 </div>
 
 
@@ -179,8 +194,10 @@
   
     <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
       
-        <a href="modules.html" class="btn btn-neutral float-right" title="IAEA" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+        <a href="main.html" class="btn btn-neutral float-right" title="main module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
       
+      
+        <a href="data_driven.html" class="btn btn-neutral float-left" title="data_driven module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
       
     </div>
   
