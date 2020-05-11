@@ -224,7 +224,7 @@
   fuselage shape:
      1d vector(element number = minimum 7, maximum 10)
 
-     cabin length(l2), section x horizontal coefficient(hx(x=1,2,3)), section x vertical coefficient(vx(x=1,2,3))
+     fuselage length(l0), section x horizontal coefficient(hx(x=1,2,3)), section x vertical coefficient(vx(x=1,2,3))
 
   wing shape:
      1d vector(element number = minimum 15, maximum 20)

@@ -24,6 +24,7 @@ class AircraftParams(object):
         print(df.loc[self.aircraft_name].values)  # extract numpy array from database
 
         # Initialize parameters
+        # deal with following value by ft or kg
 
         # fuselage
         # fuselage is divided into three section(section1: cockpit, section2: cabin, section3: after cabin)
