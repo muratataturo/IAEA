@@ -259,7 +259,7 @@
         coefficient x axis, coefficient y axis(individually, based on module), turnover ratio, upper or down sign(1, -1)
 
   aircraft shape:
-     1d vector(element number = minimum 2, maximum 4)
+     1d vector(element number = minimum 6, maximum 12)
 
      x wing mounting position(x=main, vertical, horizontal):
         coefficient x axis, coefficient z axis(fuselage based)
@@ -272,7 +272,7 @@
 <Electricity>
      1d vector(element number = minimum 2, maximum 5)
 
-     material level, electric energy density([kg/kw] or [kw/kg]), other args
+     material level, battery electric energy density([kg/kw] or [kw/kg]), other args
 
 <Mission>
      altitude, mach number, thrust at off design point, L/D, cruise range, max takeoff weight, passenger number, fuel coefficient, cargo weight ot volume
@@ -354,6 +354,9 @@ Aircraft performance class(aircraft_performance.py)
       calculate L/D at cruise
 
     aircraft weight class(aircraft_weight.py)
+      class weight params()
+            set_weight_params()
+
       calculate overall weight
       return weight results => numpy array   * Initialize 0 array
 
@@ -389,10 +392,10 @@ Aircraft component class(aircraft_component.py)
         1: MainWing class()
            keep the main wing weight or params and calculate weight
 
-        2: Horizontal tail()
+        2: Horizontal Wing()
            keep the horizontal tail wing weight or params and calculate weight
 
-        3: Vertical tail()
+        3: Vertical Wing()
            keep the vertical tail wing weight or params and calculate weight
 
         4: Fuselage()
@@ -435,13 +438,13 @@ Aircraft component class(aircraft_component.py)
         16: Avionic()
            keep the avionic's weight or params and calculate weight
 
-        17: furnishing()
+        17: Furnishing()
            keep the furnishing's weight or params and calculate weight
 
-        18: Airconditioner()
+        18: AirConditioner()
            keep the air conditioner's weight or params and calculate weight
 
-        19: Anti ice()
+        19: Anti Ice()
            keep the anti ice's weight or params and calculate weight
 
         20: Handling Gear()
