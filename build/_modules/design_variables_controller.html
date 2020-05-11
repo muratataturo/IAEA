@@ -1,0 +1,841 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>design_variables_controller &mdash; IAEA 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> IAEA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">IAEA</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">IAEA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>design_variables_controller</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for design_variables_controller</h1><div class="highlight"><pre>
+<span></span><span class="c1"># Base design variable class</span>
+<div class="viewcode-block" id="DesignVariable"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.DesignVariable">[docs]</a><span class="k">class</span> <span class="nc">DesignVariable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Note:</span>
+<span class="sd">        if you want to view aircraft or engine, you should set real value and boundary condition</span>
+<span class="sd">        if you want to optimize aircraft or engine, you should set normalized value and boundary condition</span>
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">):</span>
+        <span class="c1"># design variable name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="c1"># real value</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># normalized value(0~1)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_val</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="c1"># boundary condition</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bound</span> <span class="o">=</span> <span class="p">[</span><span class="kc">None</span><span class="p">,</span> <span class="kc">None</span><span class="p">]</span>  <span class="c1"># [minimum, maximum]</span>
+        <span class="c1"># fixed flag</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix</span> <span class="o">=</span> <span class="kc">False</span>
+
+<div class="viewcode-block" id="DesignVariable.set_bound"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.DesignVariable.set_bound">[docs]</a>    <span class="k">def</span> <span class="nf">set_bound</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">bounds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set boundary condition</span>
+
+<span class="sd">        :param bounds: [minimum value, maximum value]</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">bound</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="bp">self</span><span class="o">.</span><span class="n">bound</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">=</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">0</span><span class="p">],</span> <span class="n">bounds</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span></div>
+
+<div class="viewcode-block" id="DesignVariable.set_val"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.DesignVariable.set_val">[docs]</a>    <span class="k">def</span> <span class="nf">set_val</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">val</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set design variable&#39;s real value</span>
+
+<span class="sd">        :param val: the value of design variable</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="n">val</span></div>
+
+<div class="viewcode-block" id="DesignVariable.set_norm_val"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.DesignVariable.set_norm_val">[docs]</a>    <span class="k">def</span> <span class="nf">set_norm_val</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">norm_val</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        set design variable normalized value</span>
+
+<span class="sd">        :param norm_val: the normalized value of design variable</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_val</span> <span class="o">=</span> <span class="n">norm_val</span></div>
+
+<div class="viewcode-block" id="DesignVariable.normalize"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.DesignVariable.normalize">[docs]</a>    <span class="k">def</span> <span class="nf">normalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        normalize real value</span>
+
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">norm_val</span> <span class="o">=</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">bound</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">/</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bound</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">bound</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DesignVariable.denormalize"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.DesignVariable.denormalize">[docs]</a>    <span class="k">def</span> <span class="nf">denormalize</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">        convert normalized value into real value</span>
+
+<span class="sd">        :return:</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">val</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">bound</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span> <span class="o">+</span> <span class="bp">self</span><span class="o">.</span><span class="n">norm_val</span> <span class="o">*</span> <span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">bound</span><span class="p">[</span><span class="mi">1</span><span class="p">]</span> <span class="o">-</span> <span class="bp">self</span><span class="o">.</span><span class="n">bound</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span></div>
+
+<div class="viewcode-block" id="DesignVariable.fixed"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.DesignVariable.fixed">[docs]</a>    <span class="k">def</span> <span class="nf">fixed</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">fix_flag</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param fix_flag: boolean</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">fix</span> <span class="o">=</span> <span class="n">fix_flag</span>
+
+        <span class="k">if</span> <span class="bp">self</span><span class="o">.</span><span class="n">fix</span><span class="p">:</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">bound</span> <span class="o">=</span> <span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">val</span><span class="p">]</span></div></div>
+
+
+<span class="c1"># Aircraft fuselage design variables class</span>
+<div class="viewcode-block" id="AircraftFuselageDesignVariable"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.AircraftFuselageDesignVariable">[docs]</a><span class="k">class</span> <span class="nc">AircraftFuselageDesignVariable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+    <span class="sd">&quot;&quot;&quot;</span>
+<span class="sd">    Note:</span>
+<span class="sd">        Design Variable Controller Class for Aircraft Fuselage</span>
+
+<span class="sd">    --Attributes--</span>
+<span class="sd">        aircraft_fuselage_dv_names: list</span>
+<span class="sd">            the list of fuselage design variables</span>
+
+<span class="sd">        aircraft_fuselage_dv_idx_dict: dict</span>
+<span class="sd">            dictionary in order to change name into index number</span>
+
+<span class="sd">        fuselage_dv_num: int</span>
+<span class="sd">            the number of fuselage design variables</span>
+
+<span class="sd">        aircraft_fuselage_boundaries: list[list]</span>
+<span class="sd">            the list which keeps the bounds list</span>
+
+<span class="sd">        aircraft_fuselage_fix_flags: list[bool]</span>
+<span class="sd">            the list which keeps boolean flag which indicates whether or not the value is fixed</span>
+
+<span class="sd">        fl_dv_sets: list[DesignVariableClass]</span>
+<span class="sd">            the list of design variable class</span>
+
+<span class="sd">    --Method--</span>
+<span class="sd">        set_bounds()</span>
+
+<span class="sd">        set_fix()</span>
+
+<span class="sd">        create_dv_sets()</span>
+
+<span class="sd">    &quot;&quot;&quot;</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fuselage_length&#39;</span><span class="p">,</span> <span class="s1">&#39;s1_h&#39;</span><span class="p">,</span> <span class="s1">&#39;s2_h&#39;</span><span class="p">,</span> <span class="s1">&#39;s3_h&#39;</span><span class="p">,</span> <span class="s1">&#39;s1_v&#39;</span><span class="p">,</span> <span class="s1">&#39;s2_v&#39;</span><span class="p">,</span> <span class="s1">&#39;s3_v&#39;</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_dv_idx_dict</span> <span class="o">=</span> <span class="p">{}</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">name</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_dv_names</span><span class="p">):</span>
+            <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_dv_idx_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span> <span class="o">=</span> <span class="n">idx</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuselage_dv_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_dv_names</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_fix_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fuselage_dv_num</span><span class="p">)]</span>
+
+        <span class="c1"># Initialize design variables set</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fl_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_dv_names</span><span class="p">]</span>
+
+<div class="viewcode-block" id="AircraftFuselageDesignVariable.set_bounds"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.AircraftFuselageDesignVariable.set_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">set_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bounds</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param name: str</span>
+<span class="sd">               design variable name</span>
+<span class="sd">        :param bounds: list</span>
+<span class="sd">               list of boundary condition(min, max)</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_dv_idx_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">bounds</span></div>
+
+<div class="viewcode-block" id="AircraftFuselageDesignVariable.set_fix"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.AircraftFuselageDesignVariable.set_fix">[docs]</a>    <span class="k">def</span> <span class="nf">set_fix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param name: str</span>
+<span class="sd">               design variable name</span>
+<span class="sd">        :param flag: bool</span>
+<span class="sd">               flag which means fix</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="n">idx</span> <span class="o">=</span> <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_dv_idx_dict</span><span class="p">[</span><span class="n">name</span><span class="p">]</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_fix_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">=</span> <span class="n">flag</span></div>
+
+<div class="viewcode-block" id="AircraftFuselageDesignVariable.create_dv_sets"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.AircraftFuselageDesignVariable.create_dv_sets">[docs]</a>    <span class="k">def</span> <span class="nf">create_dv_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aircraft_fuselage_dvs</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        :param aircraft_fuselage_dvs: list</span>
+<span class="sd">               design variables vector</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+
+        <span class="c1"># set design variable class</span>
+        <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">fd</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">fl_dv_sets</span><span class="p">):</span>
+            <span class="c1"># set design variables</span>
+            <span class="n">fd</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">aircraft_fuselage_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+            <span class="c1"># set boundaries</span>
+            <span class="n">fd</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+            <span class="c1"># set fixed flag</span>
+            <span class="n">fd</span><span class="o">.</span><span class="n">fixed</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_fuselage_fix_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span></div></div>
+
+
+<span class="c1"># Aircraft wing design variable class</span>
+<div class="viewcode-block" id="AircraftWingDesignVariable"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.AircraftWingDesignVariable">[docs]</a><span class="k">class</span> <span class="nc">AircraftWingDesignVariable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_wing_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;main wing span&#39;</span><span class="p">,</span> <span class="s1">&#39;main wing AR&#39;</span><span class="p">,</span> <span class="s1">&#39;main wing taper ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;main wing tc ratio&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;main wing retreat angle&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontal wing span&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontal wing aspect ratio&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;horizontal wing taper ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontal wing tc ratio&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;horizontal wing retreat angle&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical wing span&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical wing AR&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;vertical wing taper ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical wing tc ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical wing retreat angle&#39;</span><span class="p">]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_wing_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">35</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">]]</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_wing_dv_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_wing_dv_names</span><span class="p">)</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_wing_fix_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_wing_dv_num</span><span class="p">)]</span>
+
+<div class="viewcode-block" id="AircraftWingDesignVariable.set_bounds"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.AircraftWingDesignVariable.set_bounds">[docs]</a>    <span class="k">def</span> <span class="nf">set_bounds</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">bounds</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="AircraftWingDesignVariable.set_fix"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.AircraftWingDesignVariable.set_fix">[docs]</a>    <span class="k">def</span> <span class="nf">set_fix</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="p">,</span> <span class="n">flag</span><span class="o">=</span><span class="kc">True</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<div class="viewcode-block" id="AircraftWingDesignVariable.create_dv_sets"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.AircraftWingDesignVariable.create_dv_sets">[docs]</a>    <span class="k">def</span> <span class="nf">create_dv_sets</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aircraft_wing_dvs</span><span class="p">):</span>
+        <span class="k">pass</span></div></div>
+
+<span class="c1"># Aircraft performance design variable class</span>
+<div class="viewcode-block" id="AircraftPerformanceDesignVariable"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.AircraftPerformanceDesignVariable">[docs]</a><span class="k">class</span> <span class="nc">AircraftPerformanceDesignVariable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<span class="c1"># Engine design variable class</span>
+<div class="viewcode-block" id="EngineDesignVariable"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.EngineDesignVariable">[docs]</a><span class="k">class</span> <span class="nc">EngineDesignVariable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<span class="c1"># Joint Aircraft design variable class</span>
+<div class="viewcode-block" id="JointAircraftDesignVariable"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.JointAircraftDesignVariable">[docs]</a><span class="k">class</span> <span class="nc">JointAircraftDesignVariable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<span class="c1"># Joint Engine design variable class</span>
+<div class="viewcode-block" id="JointEngineDesignVariable"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.JointEngineDesignVariable">[docs]</a><span class="k">class</span> <span class="nc">JointEngineDesignVariable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<span class="c1"># BLI design variable class</span>
+<div class="viewcode-block" id="BLIDesignVariable"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.BLIDesignVariable">[docs]</a><span class="k">class</span> <span class="nc">BLIDesignVariable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+<span class="c1"># Mission design variable class</span>
+<div class="viewcode-block" id="MissionDesignVariable"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.MissionDesignVariable">[docs]</a><span class="k">class</span> <span class="nc">MissionDesignVariable</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+
+<span class="c1"># Integration Design Variables Controller</span>
+<div class="viewcode-block" id="DesignVariablesController"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.DesignVariablesController">[docs]</a><span class="k">class</span> <span class="nc">DesignVariablesController</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">aircraft_params_class</span><span class="p">,</span> <span class="n">engine_params_class</span><span class="p">):</span>
+
+        <span class="c1"># Parameter class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">aircraft_params_class</span> <span class="o">=</span> <span class="n">aircraft_params_class</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine_params_class</span> <span class="o">=</span> <span class="n">engine_params_class</span></div>
+
+        <span class="c1"># set aircraft parameter from design variables</span>
+
+
+<span class="c1"># test code</span>
+<div class="viewcode-block" id="main"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.main">[docs]</a><span class="k">def</span> <span class="nf">main</span><span class="p">():</span>
+    <span class="c1"># build aircraft fuselage design variable class</span>
+    <span class="n">fuselage_length</span> <span class="o">=</span> <span class="mf">37.57</span>  <span class="c1"># [m]</span>
+    <span class="n">s1_h</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># section 1 horizontal coefficient</span>
+    <span class="n">s2_h</span> <span class="o">=</span> <span class="mf">0.105</span>  <span class="c1"># section 2 horizontal coefficient</span>
+    <span class="n">s3_h</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># section 3 horizontal coefficient</span>
+    <span class="n">s1_v</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># section 1 vertical coefficient</span>
+    <span class="n">s2_v</span> <span class="o">=</span> <span class="mf">0.6</span>  <span class="c1"># section 2 vertical coefficient</span>
+    <span class="n">s3_v</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># section 3 vertical coefficient</span>
+    <span class="n">aircraft_fuselage_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">fuselage_length</span><span class="p">,</span> <span class="n">s1_h</span><span class="p">,</span> <span class="n">s2_h</span><span class="p">,</span> <span class="n">s3_h</span><span class="p">,</span> <span class="n">s1_v</span><span class="p">,</span> <span class="n">s2_v</span><span class="p">,</span> <span class="n">s3_v</span><span class="p">]</span>
+
+    <span class="c1"># Initialization</span>
+    <span class="n">afdv</span> <span class="o">=</span> <span class="n">AircraftFuselageDesignVariable</span><span class="p">()</span>
+    <span class="c1"># create the sets of design variables</span>
+    <span class="n">afdv</span><span class="o">.</span><span class="n">create_dv_sets</span><span class="p">(</span><span class="n">aircraft_fuselage_dvs</span><span class="p">)</span>
+
+    <span class="c1"># confirmation</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;aircraft fuselage class&#39;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">afdv</span><span class="o">.</span><span class="n">fl_dv_sets</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">bound</span><span class="p">)</span>
+        <span class="nb">print</span><span class="p">(</span><span class="n">u</span><span class="o">.</span><span class="n">fix</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="s1">&#39;&#39;</span><span class="p">)</span>
+
+    <span class="c1"># build aircraft wing design variable class</span>
+
+    <span class="c1"># build aircraft performance design variable class</span>
+
+    <span class="c1"># build joint aircraft design variable class</span>
+
+    <span class="c1"># build joint engine design variable class</span>
+
+    <span class="c1"># build BLI design variable class</span>
+
+    <span class="c1"># build mission design variable class</span>
+
+    <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="main_"><a class="viewcode-back" href="../design_variables_controller.html#design_variables_controller.main_">[docs]</a><span class="k">def</span> <span class="nf">main_</span><span class="p">():</span>
+
+    <span class="c1"># unit change</span>
+    <span class="n">m_to_ft</span> <span class="o">=</span> <span class="mf">3.28084</span>
+    <span class="n">kg_to_lb</span> <span class="o">=</span> <span class="mf">2.204621</span>
+
+    <span class="n">design_variables</span> <span class="o">=</span> <span class="p">[]</span>
+
+    <span class="c1"># aircraft design variables</span>
+    <span class="c1"># fuselage part, section1: cockpit, section2: cabin, section3: after cabin</span>
+    <span class="n">aircraft_fuselage_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;fuselage_length&#39;</span><span class="p">,</span> <span class="s1">&#39;s1_h&#39;</span><span class="p">,</span> <span class="s1">&#39;s2_h&#39;</span><span class="p">,</span> <span class="s1">&#39;s3_h&#39;</span><span class="p">,</span> <span class="s1">&#39;s1_v&#39;</span><span class="p">,</span> <span class="s1">&#39;s2_v&#39;</span><span class="p">,</span> <span class="s1">&#39;s3_v&#39;</span><span class="p">]</span>
+    <span class="n">aircraft_fuselage_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+    <span class="n">aircraft_fuselage_fixed_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">,</span> <span class="kc">False</span><span class="p">]</span>
+    <span class="n">fuselage_length</span> <span class="o">=</span> <span class="mf">37.57</span>  <span class="c1"># [m]</span>
+    <span class="n">s1_h</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># section 1 horizontal coefficient</span>
+    <span class="n">s2_h</span> <span class="o">=</span> <span class="mf">0.105</span>  <span class="c1"># section 2 horizontal coefficient</span>
+    <span class="n">s3_h</span> <span class="o">=</span> <span class="mf">0.05</span>  <span class="c1"># section 3 horizontal coefficient</span>
+    <span class="n">s1_v</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># section 1 vertical coefficient</span>
+    <span class="n">s2_v</span> <span class="o">=</span> <span class="mf">0.6</span>  <span class="c1"># section 2 vertical coefficient</span>
+    <span class="n">s3_v</span> <span class="o">=</span> <span class="mf">0.2</span>  <span class="c1"># section 3 vertical coefficient</span>
+    <span class="n">aircraft_fuselage_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">fuselage_length</span><span class="p">,</span> <span class="n">s1_h</span><span class="p">,</span> <span class="n">s2_h</span><span class="p">,</span> <span class="n">s3_h</span><span class="p">,</span> <span class="n">s1_v</span><span class="p">,</span> <span class="n">s2_v</span><span class="p">,</span> <span class="n">s3_v</span><span class="p">]</span>
+
+    <span class="c1"># Initialize design variables set</span>
+    <span class="n">fl_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">aircraft_fuselage_dv_names</span><span class="p">]</span>
+
+    <span class="c1"># set design variable class</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">fd</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">fl_dv_sets</span><span class="p">):</span>
+        <span class="c1"># set design variables</span>
+        <span class="n">fd</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">aircraft_fuselage_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="c1"># set boundaries</span>
+        <span class="n">fd</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="n">aircraft_fuselage_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="c1"># set fixed flag</span>
+        <span class="n">fd</span><span class="o">.</span><span class="n">fixed</span><span class="p">(</span><span class="n">aircraft_fuselage_fixed_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="n">fl_dv_sets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">val</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fl_dv_sets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">bound</span><span class="p">)</span>
+    <span class="nb">print</span><span class="p">(</span><span class="n">fl_dv_sets</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">fix</span><span class="p">)</span>
+
+    <span class="n">fl_bs_index</span><span class="p">,</span> <span class="n">fl_bf_index</span> <span class="o">=</span> <span class="mi">0</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">aircraft_fuselage_dvs</span><span class="p">)</span>
+
+
+    <span class="c1"># wing part</span>
+    <span class="n">aircraft_wing_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;main wing span&#39;</span><span class="p">,</span> <span class="s1">&#39;main wing AR&#39;</span><span class="p">,</span> <span class="s1">&#39;main wing taper ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;main wing tc ratio&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;main wing retreat angle&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontal wing span&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontal wing aspect ratio&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;horizontal wing taper ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontal wing tc ratio&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;horizontal wing retreat angle&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical wing span&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical wing AR&#39;</span><span class="p">,</span>
+                              <span class="s1">&#39;vertical wing taper ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical wing tc ratio&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical wing retreat angle&#39;</span><span class="p">]</span>
+
+
+    <span class="n">aircraft_wing_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">30</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mi">10</span><span class="p">,</span> <span class="mi">15</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">1.5</span><span class="p">,</span> <span class="mf">3.0</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mi">25</span><span class="p">,</span> <span class="mi">35</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mi">5</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">1.0</span><span class="p">,</span> <span class="mf">2.0</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.2</span><span class="p">,</span> <span class="mf">0.3</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>
+                                <span class="p">[</span><span class="mi">40</span><span class="p">,</span> <span class="mi">50</span><span class="p">]]</span>
+
+    <span class="n">aircraft_wing_dv_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">aircraft_wing_dv_names</span><span class="p">)</span>
+
+    <span class="n">aircraft_wing_fixed_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">aircraft_wing_dv_num</span><span class="p">)]</span>
+
+    <span class="n">bm</span> <span class="o">=</span> <span class="mf">34.1</span>  <span class="c1"># main wing span [m]</span>
+    <span class="n">ARm</span> <span class="o">=</span> <span class="mf">9.5</span>  <span class="c1"># main wing aspect ratio</span>
+    <span class="n">tm</span> <span class="o">=</span> <span class="mf">0.24</span>  <span class="c1"># taper ratio</span>
+    <span class="n">tcm</span> <span class="o">=</span> <span class="mf">0.11</span>  <span class="c1"># the ratio of thickness and chord at main wing</span>
+    <span class="n">thetam</span> <span class="o">=</span> <span class="mf">25.0</span>  <span class="c1"># retreat angle of main wing[rad]</span>
+    <span class="c1"># horizontal</span>
+    <span class="n">bh</span> <span class="o">=</span> <span class="mf">12.45</span>
+    <span class="n">ARh</span> <span class="o">=</span> <span class="mf">2.0</span>
+    <span class="n">th</span> <span class="o">=</span> <span class="mf">0.24</span>
+    <span class="n">tch</span> <span class="o">=</span> <span class="mf">0.11</span>
+    <span class="n">thetah</span> <span class="o">=</span> <span class="mf">31.0</span>
+    <span class="c1"># vertical</span>
+    <span class="n">bv</span> <span class="o">=</span> <span class="mf">5.87</span>
+    <span class="n">ARv</span> <span class="o">=</span> <span class="mf">1.2</span>
+    <span class="n">tv</span> <span class="o">=</span> <span class="mf">0.24</span>
+    <span class="n">tcv</span> <span class="o">=</span> <span class="mf">0.15</span>
+    <span class="n">thetav</span> <span class="o">=</span> <span class="mf">49.0</span>
+
+    <span class="n">aircraft_wing_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">bm</span><span class="p">,</span> <span class="n">ARm</span><span class="p">,</span> <span class="n">tm</span><span class="p">,</span> <span class="n">tcm</span><span class="p">,</span> <span class="n">thetam</span><span class="p">,</span> <span class="n">bh</span><span class="p">,</span> <span class="n">ARh</span><span class="p">,</span> <span class="n">th</span><span class="p">,</span> <span class="n">tch</span><span class="p">,</span> <span class="n">thetah</span><span class="p">,</span> <span class="n">bv</span><span class="p">,</span> <span class="n">ARv</span><span class="p">,</span> <span class="n">tv</span><span class="p">,</span> <span class="n">tcv</span><span class="p">,</span> <span class="n">thetav</span><span class="p">]</span>
+
+    <span class="c1"># Initialize aircraft wing dv sets</span>
+    <span class="n">aw_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">aircraft_wing_dv_names</span><span class="p">]</span>
+
+    <span class="c1"># set aircraft wing dv sets</span>
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ad</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">aw_dv_sets</span><span class="p">):</span>
+
+        <span class="n">ad</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">aircraft_wing_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">ad</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="n">aircraft_wing_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">ad</span><span class="o">.</span><span class="n">fixed</span><span class="p">(</span><span class="n">aircraft_wing_fixed_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="n">w_bs_index</span><span class="p">,</span> <span class="n">w_bf_index</span> <span class="o">=</span> <span class="n">fl_bf_index</span><span class="p">,</span> <span class="nb">len</span><span class="p">(</span><span class="n">aircraft_wing_dvs</span><span class="p">)</span> <span class="o">+</span> <span class="n">fl_bf_index</span>
+
+
+    <span class="c1"># aircraft performance part</span>
+    <span class="n">aircraft_performance_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;attack of angle&#39;</span><span class="p">]</span>
+    <span class="n">aircraft_performance_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">6</span><span class="p">]]</span>
+    <span class="n">aoa</span> <span class="o">=</span> <span class="mi">4</span>  <span class="c1"># attack of angle</span>
+    <span class="n">aircraft_performance_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">aoa</span><span class="p">]</span>
+
+    <span class="c1"># Initialize the aircraft performance dv sets</span>
+    <span class="n">ap_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">aircraft_performance_dv_names</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ad</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">ap_dv_sets</span><span class="p">):</span>
+
+        <span class="n">ad</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">aircraft_performance_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">ad</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="n">aircraft_performance_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="n">pf_bs_index</span><span class="p">,</span> <span class="n">pf_bf_index</span> <span class="o">=</span> <span class="n">w_bf_index</span><span class="p">,</span> <span class="n">w_bf_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">aircraft_performance_dvs</span><span class="p">)</span>
+
+
+    <span class="c1"># engine design variables</span>
+
+    <span class="n">engine_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;OPR&#39;</span><span class="p">,</span> <span class="s1">&#39;TIT&#39;</span><span class="p">,</span> <span class="s1">&#39;BPR&#39;</span><span class="p">,</span> <span class="s1">&#39;FPR&#39;</span><span class="p">,</span> <span class="s1">&#39;Nen&#39;</span><span class="p">,</span> <span class="s1">&#39;technical level&#39;</span><span class="p">,</span> <span class="s1">&#39;cool air lpt rate&#39;</span><span class="p">,</span> <span class="s1">&#39;cool air hpt rate&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;engine material quality&#39;</span><span class="p">,</span> <span class="s1">&#39;fan stage number&#39;</span><span class="p">,</span> <span class="s1">&#39;lpc stage number&#39;</span><span class="p">,</span> <span class="s1">&#39;hpc stage number&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;hpt stage number&#39;</span><span class="p">,</span> <span class="s1">&#39;lpt stage number&#39;</span><span class="p">,</span> <span class="s1">&#39;fan load factor&#39;</span><span class="p">,</span> <span class="s1">&#39;lpc load factor&#39;</span><span class="p">,</span> <span class="s1">&#39;hpc load factor&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;hpt load factor&#39;</span><span class="p">,</span> <span class="s1">&#39;lpt load factor&#39;</span><span class="p">,</span> <span class="s1">&#39;BPRe&#39;</span><span class="p">,</span> <span class="s1">&#39;FPRe&#39;</span><span class="p">,</span> <span class="s1">&#39;Nfan&#39;</span><span class="p">,</span> <span class="s1">&#39;engine electric efficiency&#39;</span><span class="p">,</span>
+                       <span class="s1">&#39;engine electric density&#39;</span><span class="p">]</span>
+
+    <span class="n">engine_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">20</span><span class="p">,</span> <span class="mi">40</span><span class="p">],</span>  <span class="c1"># OPR</span>
+                         <span class="p">[</span><span class="mi">1200</span><span class="p">,</span> <span class="mi">1500</span><span class="p">],</span>  <span class="c1"># TIT</span>
+                         <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">8</span><span class="p">],</span>  <span class="c1"># BPR</span>
+                         <span class="p">[</span><span class="mf">1.2</span><span class="p">,</span> <span class="mf">1.7</span><span class="p">],</span>  <span class="c1"># FPR</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>  <span class="c1"># Nen</span>
+                         <span class="p">[</span><span class="mi">3</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>  <span class="c1"># tech lev</span>
+                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.1</span><span class="p">],</span>  <span class="c1"># cool air lpt</span>
+                         <span class="p">[</span><span class="mf">0.0</span><span class="p">,</span> <span class="mf">0.2</span><span class="p">],</span>  <span class="c1"># cool air hpt</span>
+                         <span class="p">[</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span>  <span class="c1"># engine material quality</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">],</span>  <span class="c1"># fan stage number</span>
+                         <span class="p">[</span><span class="mi">2</span><span class="p">,</span> <span class="mi">4</span><span class="p">],</span>  <span class="c1"># lpc stage number</span>
+                         <span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>  <span class="c1"># hpc stage number</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">3</span><span class="p">],</span>  <span class="c1"># hpt stage number</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">5</span><span class="p">],</span>  <span class="c1"># lpt stage number</span>
+                         <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span>  <span class="c1"># fan load factor</span>
+                         <span class="p">[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">0.4</span><span class="p">],</span>  <span class="c1"># lpc load factor</span>
+                         <span class="p">[</span><span class="mf">0.3</span><span class="p">,</span> <span class="mf">0.5</span><span class="p">],</span>  <span class="c1"># hpc load factor</span>
+                         <span class="p">[</span><span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">],</span>  <span class="c1"># hpt load factor</span>
+                         <span class="p">[</span><span class="mf">1.3</span><span class="p">,</span> <span class="mf">1.6</span><span class="p">],</span>  <span class="c1"># lpt load factor</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>  <span class="c1"># BPRe</span>
+                         <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mf">1.5</span><span class="p">],</span>  <span class="c1"># FPRe</span>
+                         <span class="p">[</span><span class="mi">1</span><span class="p">,</span> <span class="mi">10</span><span class="p">],</span>  <span class="c1"># Nfan</span>
+                         <span class="p">[</span><span class="mf">0.9</span><span class="p">,</span> <span class="mf">0.99</span><span class="p">],</span>  <span class="c1"># eng_electriceff</span>
+                         <span class="p">[</span><span class="mf">0.052</span><span class="p">,</span> <span class="mf">0.52</span><span class="p">]</span>  <span class="c1"># eng_electric_dense</span>
+                         <span class="p">]</span>
+
+    <span class="n">engine_dv_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">engine_dv_names</span><span class="p">)</span>
+
+    <span class="n">engine_fix_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">engine_dv_num</span><span class="p">)]</span>
+
+    <span class="n">OPR</span> <span class="o">=</span> <span class="mi">30</span>
+    <span class="n">TIT</span> <span class="o">=</span> <span class="mi">1400</span>
+    <span class="n">BPR</span> <span class="o">=</span> <span class="mf">6.0</span>
+    <span class="n">FPR</span> <span class="o">=</span> <span class="mf">1.4</span>
+    <span class="n">Nen</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">tech_lev</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">cool_air_lpt</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">cool_air_hpt</span> <span class="o">=</span> <span class="mf">0.15</span>
+    <span class="n">engine_material_quality</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">fan_sn</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">lpc_sn</span> <span class="o">=</span> <span class="mi">2</span>
+    <span class="n">hpc_sn</span> <span class="o">=</span> <span class="mi">10</span>
+    <span class="n">hpt_sn</span> <span class="o">=</span> <span class="mi">1</span>
+    <span class="n">lpt_sn</span> <span class="o">=</span> <span class="mi">3</span>
+    <span class="n">fan_lf</span> <span class="o">=</span> <span class="mf">0.2</span>
+    <span class="n">lpc_lf</span> <span class="o">=</span> <span class="mf">0.2</span>
+    <span class="n">hpc_lf</span> <span class="o">=</span> <span class="mf">0.4</span>
+    <span class="n">hpt_lf</span> <span class="o">=</span> <span class="mf">1.5</span>
+    <span class="n">lpt_lf</span> <span class="o">=</span> <span class="mf">1.5</span>
+    <span class="n">BPRe</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">FPRe</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">Nfan</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">eng_electriceff</span> <span class="o">=</span> <span class="mf">0.9</span>
+    <span class="n">eng_electric_dense</span> <span class="o">=</span> <span class="mf">0.52</span>
+
+    <span class="n">engine_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">OPR</span><span class="p">,</span> <span class="n">TIT</span><span class="p">,</span> <span class="n">BPR</span><span class="p">,</span> <span class="n">FPR</span><span class="p">,</span> <span class="n">Nen</span><span class="p">,</span> <span class="n">tech_lev</span><span class="p">,</span> <span class="n">cool_air_lpt</span><span class="p">,</span> <span class="n">cool_air_hpt</span><span class="p">,</span> <span class="n">engine_material_quality</span><span class="p">,</span>
+                  <span class="n">fan_sn</span><span class="p">,</span> <span class="n">lpc_sn</span><span class="p">,</span> <span class="n">hpc_sn</span><span class="p">,</span> <span class="n">hpt_sn</span><span class="p">,</span> <span class="n">lpt_sn</span><span class="p">,</span> <span class="n">fan_lf</span><span class="p">,</span> <span class="n">lpc_lf</span><span class="p">,</span> <span class="n">hpc_lf</span><span class="p">,</span> <span class="n">hpt_lf</span><span class="p">,</span> <span class="n">lpt_lf</span><span class="p">,</span>
+                  <span class="n">BPRe</span><span class="p">,</span> <span class="n">FPRe</span><span class="p">,</span> <span class="n">Nfan</span><span class="p">,</span> <span class="n">eng_electriceff</span><span class="p">,</span> <span class="n">eng_electric_dense</span><span class="p">]</span>
+
+    <span class="n">e_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">engine_dv_names</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ed</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">e_dv_sets</span><span class="p">):</span>
+
+        <span class="n">ed</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">engine_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">ed</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="n">engine_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">ed</span><span class="o">.</span><span class="n">fixed</span><span class="p">(</span><span class="n">engine_fix_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="n">ed_bs_index</span><span class="p">,</span> <span class="n">ed_bf_index</span> <span class="o">=</span> <span class="n">pf_bf_index</span><span class="p">,</span> <span class="n">pf_bf_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">engine_dvs</span><span class="p">)</span>
+
+    <span class="c1"># joint design variables</span>
+    <span class="c1"># aircraft</span>
+    <span class="n">aircraft_mounting_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;main wing coefficient x&#39;</span><span class="p">,</span> <span class="s1">&#39;main wing coefficient z&#39;</span><span class="p">,</span> <span class="s1">&#39;horizontal wing coefficient x&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;horizontal wing coefficient z&#39;</span><span class="p">,</span> <span class="s1">&#39;vertical wing coefficient x&#39;</span><span class="p">,</span>
+                                  <span class="s1">&#39;vertical wing coefficient z&#39;</span><span class="p">]</span>
+    <span class="n">aircraft_mounting_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                    <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">aircraft_mounting_dv_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">aircraft_mounting_dv_names</span><span class="p">)</span>
+    <span class="n">aircraft_mounting_fix_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">aircraft_mounting_dv_num</span><span class="p">)]</span>
+
+    <span class="n">acmx</span> <span class="o">=</span> <span class="mf">0.4</span>
+    <span class="n">acmz</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">achx</span> <span class="o">=</span> <span class="mf">0.9</span>
+    <span class="n">achz</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">acbx</span> <span class="o">=</span> <span class="mf">0.9</span>
+    <span class="n">acbz</span> <span class="o">=</span> <span class="mi">0</span>
+
+    <span class="n">aircraft_mounting_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">acmx</span><span class="p">,</span> <span class="n">acmz</span><span class="p">,</span> <span class="n">achx</span><span class="p">,</span> <span class="n">achz</span><span class="p">,</span> <span class="n">acbx</span><span class="p">,</span> <span class="n">acbz</span><span class="p">]</span>
+
+    <span class="n">am_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">aircraft_mounting_dv_names</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">amd</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">am_dv_sets</span><span class="p">):</span>
+        <span class="n">amd</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">aircraft_mounting_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">amd</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="n">aircraft_mounting_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">amd</span><span class="o">.</span><span class="n">fixed</span><span class="p">(</span><span class="n">aircraft_mounting_fix_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="n">am_bs_index</span><span class="p">,</span> <span class="n">am_bf_index</span> <span class="o">=</span> <span class="n">ed_bf_index</span><span class="p">,</span> <span class="n">ed_bf_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">aircraft_mounting_dvs</span><span class="p">)</span>
+
+    <span class="c1"># engine</span>
+    <span class="n">engine_mounting_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;core engine mounting coefficient x&#39;</span><span class="p">,</span> <span class="s1">&#39;core engine mounting coefficient y&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;core engine moiunting turnover angle&#39;</span><span class="p">,</span> <span class="s1">&#39;core engine sign&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;distributed engine mounting coefficient x&#39;</span><span class="p">,</span> <span class="s1">&#39;distributed engine mounting coefficient y&#39;</span><span class="p">,</span>
+                                <span class="s1">&#39;distributed engine mounting turnover angle&#39;</span><span class="p">,</span> <span class="s1">&#39;distributed engine sign&#39;</span><span class="p">]</span>
+    <span class="n">engine_mounting_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">90</span><span class="p">],</span>
+                                  <span class="p">[</span><span class="o">-</span><span class="mi">1</span><span class="p">,</span> <span class="mi">1</span><span class="p">]]</span>
+
+    <span class="n">engine_mounting_dv_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">engine_mounting_dv_names</span><span class="p">)</span>
+    <span class="n">engine_mounting_fix_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">engine_mounting_dv_num</span><span class="p">)]</span>
+
+    <span class="n">ecmx</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">ecmy</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">theta_ec</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">sign_ec</span> <span class="o">=</span> <span class="o">-</span><span class="mi">1</span>
+    <span class="n">edmx</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">edmy</span> <span class="o">=</span> <span class="mf">0.1</span>
+    <span class="n">theta_ed</span> <span class="o">=</span> <span class="mi">0</span>
+    <span class="n">sign_ed</span> <span class="o">=</span> <span class="mi">1</span>
+
+    <span class="n">engine_mounting_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">ecmx</span><span class="p">,</span> <span class="n">ecmy</span><span class="p">,</span> <span class="n">theta_ec</span><span class="p">,</span> <span class="n">sign_ec</span><span class="p">,</span> <span class="n">edmx</span><span class="p">,</span> <span class="n">edmy</span><span class="p">,</span> <span class="n">theta_ed</span><span class="p">,</span> <span class="n">sign_ed</span><span class="p">]</span>
+
+    <span class="n">em_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">engine_mounting_dv_names</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">emd</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">em_dv_sets</span><span class="p">):</span>
+        <span class="n">emd</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">engine_mounting_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">emd</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="n">engine_mounting_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">emd</span><span class="o">.</span><span class="n">fixed</span><span class="p">(</span><span class="n">engine_mounting_fix_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="n">em_bs_index</span><span class="p">,</span> <span class="n">em_bf_index</span> <span class="o">=</span> <span class="n">am_bf_index</span><span class="p">,</span> <span class="n">am_bf_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">engine_mounting_dvs</span><span class="p">)</span>
+
+    <span class="c1"># BLI</span>
+    <span class="n">bli_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;distortion angle&#39;</span><span class="p">]</span>
+    <span class="n">bli_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">120</span><span class="p">]]</span>
+    <span class="n">bli_dv_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">bli_dv_names</span><span class="p">)</span>
+    <span class="n">bli_fix_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">bli_dv_num</span><span class="p">)]</span>
+
+    <span class="n">dist_ang</span> <span class="o">=</span> <span class="mi">60</span>
+
+    <span class="n">bli_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">dist_ang</span><span class="p">]</span>
+
+    <span class="n">bli_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">bli_dv_names</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">bld</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">bli_dv_sets</span><span class="p">):</span>
+        <span class="n">bld</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">bli_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">bld</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="n">bli_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">bld</span><span class="o">.</span><span class="n">fixed</span><span class="p">(</span><span class="n">bli_fix_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="n">bl_bs_index</span><span class="p">,</span> <span class="n">bl_bf_index</span> <span class="o">=</span> <span class="n">em_bf_index</span><span class="p">,</span> <span class="n">em_bf_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">bli_dvs</span><span class="p">)</span>
+
+    <span class="c1"># electric</span>
+    <span class="n">electric_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;material level&#39;</span><span class="p">,</span> <span class="s1">&#39;battery electric density&#39;</span><span class="p">]</span>
+    <span class="n">electric_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mf">0.1</span><span class="p">,</span> <span class="mf">1.0</span><span class="p">],</span> <span class="p">[</span><span class="mf">5.2</span><span class="p">,</span> <span class="mf">10.0</span><span class="p">]]</span>
+
+    <span class="n">electric_dv_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">electric_dv_names</span><span class="p">)</span>
+    <span class="n">electric_fix_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">electric_dv_num</span><span class="p">)]</span>
+
+    <span class="n">mat_lev</span> <span class="o">=</span> <span class="mf">1.0</span>
+    <span class="n">bat_ele_dense</span> <span class="o">=</span> <span class="mf">5.2</span>  <span class="c1"># [kW/kg]</span>
+    <span class="n">electric_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">mat_lev</span><span class="p">,</span> <span class="n">bat_ele_dense</span><span class="p">]</span>
+
+    <span class="n">e_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">electric_dv_names</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">ed</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">e_dv_sets</span><span class="p">):</span>
+        <span class="n">ed</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">electric_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">ed</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="n">electric_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">ed</span><span class="o">.</span><span class="n">fixed</span><span class="p">(</span><span class="n">electric_fix_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="n">ele_bs_index</span><span class="p">,</span> <span class="n">ele_bf_index</span> <span class="o">=</span> <span class="n">bl_bf_index</span><span class="p">,</span> <span class="n">bl_bf_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">electric_dvs</span><span class="p">)</span>
+
+    <span class="c1"># mission</span>
+    <span class="n">mission_dv_names</span> <span class="o">=</span> <span class="p">[</span><span class="s1">&#39;altitude&#39;</span><span class="p">,</span> <span class="s1">&#39;mach number&#39;</span><span class="p">,</span> <span class="s1">&#39;thrust at off design point&#39;</span><span class="p">,</span> <span class="s1">&#39;lift by drag&#39;</span><span class="p">,</span> <span class="s1">&#39;cruise range&#39;</span><span class="p">,</span>
+                        <span class="s1">&#39;max takeoff weight&#39;</span><span class="p">,</span> <span class="s1">&#39;passenger number&#39;</span><span class="p">,</span> <span class="s1">&#39;fuel coefficient&#39;</span><span class="p">,</span> <span class="s1">&#39;cargo weight&#39;</span><span class="p">,</span> <span class="s1">&#39;cargo volume&#39;</span><span class="p">]</span>
+    <span class="n">mission_boundaries</span> <span class="o">=</span> <span class="p">[[</span><span class="mi">10000</span><span class="p">,</span> <span class="mi">14000</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mf">0.7</span><span class="p">,</span> <span class="mf">0.9</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">120000</span><span class="p">,</span> <span class="mi">150000</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">15</span><span class="p">,</span> <span class="mi">17</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">4500</span><span class="p">,</span> <span class="mi">5000</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">75000</span><span class="p">,</span> <span class="mi">80000</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">100</span><span class="p">,</span> <span class="mi">200</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mf">0.4</span><span class="p">,</span> <span class="mf">0.7</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">6000</span><span class="p">,</span> <span class="mi">7000</span><span class="p">],</span>
+                          <span class="p">[</span><span class="mi">30</span><span class="p">,</span> <span class="mi">40</span><span class="p">]]</span>
+
+    <span class="n">mission_dv_num</span> <span class="o">=</span> <span class="nb">len</span><span class="p">(</span><span class="n">mission_dv_names</span><span class="p">)</span>
+    <span class="n">mission_fix_flags</span> <span class="o">=</span> <span class="p">[</span><span class="kc">False</span> <span class="k">for</span> <span class="n">_</span> <span class="ow">in</span> <span class="nb">range</span><span class="p">(</span><span class="n">mission_dv_num</span><span class="p">)]</span>
+
+    <span class="n">altitude</span> <span class="o">=</span> <span class="mi">10668</span>  <span class="c1"># [m]</span>
+    <span class="n">mach_number</span> <span class="o">=</span> <span class="mf">0.82</span>
+    <span class="n">thrust_doff</span> <span class="o">=</span> <span class="mi">133000</span>  <span class="c1"># [N]</span>
+    <span class="n">ld</span> <span class="o">=</span> <span class="mi">17</span>
+    <span class="n">cruise_range</span> <span class="o">=</span> <span class="mi">4808</span>  <span class="c1"># [km]</span>
+    <span class="n">mtow</span> <span class="o">=</span> <span class="mi">78000</span>  <span class="c1"># [kg]</span>
+    <span class="n">passenger_num</span> <span class="o">=</span> <span class="mi">150</span>
+    <span class="n">fuel_coef</span> <span class="o">=</span> <span class="mf">0.6</span>
+    <span class="n">cargo_weight</span> <span class="o">=</span> <span class="mi">6300</span>  <span class="c1"># [kg]</span>
+    <span class="n">cargo_volume</span> <span class="o">=</span> <span class="mf">37.63</span>  <span class="c1"># [m^3]</span>
+
+    <span class="n">mission_dvs</span> <span class="o">=</span> <span class="p">[</span><span class="n">altitude</span><span class="p">,</span> <span class="n">mach_number</span><span class="p">,</span> <span class="n">thrust_doff</span><span class="p">,</span> <span class="n">ld</span><span class="p">,</span> <span class="n">cruise_range</span><span class="p">,</span> <span class="n">mtow</span><span class="p">,</span> <span class="n">passenger_num</span><span class="p">,</span> <span class="n">fuel_coef</span><span class="p">,</span> <span class="n">cargo_weight</span><span class="p">,</span> <span class="n">cargo_volume</span><span class="p">]</span>
+
+    <span class="n">m_dv_sets</span> <span class="o">=</span> <span class="p">[</span><span class="n">DesignVariable</span><span class="p">(</span><span class="n">name</span><span class="p">)</span> <span class="k">for</span> <span class="n">name</span> <span class="ow">in</span> <span class="n">mission_dv_names</span><span class="p">]</span>
+
+    <span class="k">for</span> <span class="n">idx</span><span class="p">,</span> <span class="n">md</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">m_dv_sets</span><span class="p">):</span>
+        <span class="n">md</span><span class="o">.</span><span class="n">set_val</span><span class="p">(</span><span class="n">mission_dvs</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">md</span><span class="o">.</span><span class="n">set_bound</span><span class="p">(</span><span class="n">mission_boundaries</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+        <span class="n">md</span><span class="o">.</span><span class="n">fixed</span><span class="p">(</span><span class="n">mission_fix_flags</span><span class="p">[</span><span class="n">idx</span><span class="p">])</span>
+
+    <span class="n">mis_bs_index</span><span class="p">,</span> <span class="n">mis_bf_index</span> <span class="o">=</span> <span class="n">ele_bf_index</span><span class="p">,</span> <span class="n">ele_bf_index</span> <span class="o">+</span> <span class="nb">len</span><span class="p">(</span><span class="n">mission_dvs</span><span class="p">)</span></div>
+    
+
+
+
+
+
+
+
+
+
+<span class="k">if</span> <span class="vm">__name__</span> <span class="o">==</span> <span class="s1">&#39;__main__&#39;</span><span class="p">:</span>
+    <span class="n">main</span><span class="p">()</span>
+
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, tatsuro murata
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

@@ -169,12 +169,104 @@
         <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">columns</span><span class="p">)</span>  <span class="c1"># extract column</span>
         <span class="nb">print</span><span class="p">(</span><span class="n">df</span><span class="o">.</span><span class="n">loc</span><span class="p">[</span><span class="bp">self</span><span class="o">.</span><span class="n">aircraft_name</span><span class="p">]</span><span class="o">.</span><span class="n">values</span><span class="p">)</span>  <span class="c1"># extract numpy array from database</span>
 
+        <span class="c1"># Initialize parameters</span>
+        <span class="c1"># deal with following value by ft or kg</span>
 
-<div class="viewcode-block" id="AircraftParams.setting"><a class="viewcode-back" href="../aircraft_params.html#aircraft_params.AircraftParams.setting">[docs]</a>    <span class="k">def</span> <span class="nf">setting</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># fuselage</span>
+        <span class="c1"># fuselage is divided into three section(section1: cockpit, section2: cabin, section3: after cabin)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cockpit_length</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># l1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cabin_length</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># l2</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">after_cabin_length</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># l3</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">fuselage_length</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># l1 + l2 + l3</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">cockpit_width</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># w1</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cabin_width</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># w2(df)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">after_cabin_length</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># w3</span>
+
+        <span class="c1"># Note: cockpit and after cabin shapes are circle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cockpit_upper_height</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the height of upper part of cockpit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cockpit_lower_height</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the height of lower part of cockpit</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cabin_upper_height</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the height of fuselage which contains passenger</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">cabin_lower_height</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the height of fuselage which is determined by cargo fuselage</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">after_cabin_upper_height</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the height of upper part of after cabin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">after_cabin_lower_height</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># hte height of lower part of after cabin</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">KWs</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># costant =&gt; 0.75 * ((1.0 + 2.0 * taper ratio) / (1.0 + taper ratio)) * (main wing span * np.tan(25 * wingsweep_theta / fuselage length))</span>
+
+        <span class="c1"># main wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_wing_span</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># wing span(b)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_wing_aspect_ratio</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># AR</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_wing_taper_ratio</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># t</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_wing_tc</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the ratio of thickness and chord</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">retreat_angle</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># theta</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_wing_croot</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the root chord of main wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_wing_ctip</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the tip chord of main wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_wing_area</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># S</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nz</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ultimate load coefficient</span>
+
+        <span class="c1"># vertical wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertical_wing_span</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># wing span(bv)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertical_wing_aspect_ratio</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ARv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertical_wing_taper_ratio</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># tv</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertical_wing_tc</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the ratio of thickness and chord at vertical wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertical_retreat_angle</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># thetav</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertical_wing_croot</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the root chord of vertical wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertical_wing_ctip</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the tip chord of vertical wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">vertical_wing_area</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Sv</span>
+
+        <span class="c1"># vertical wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_wing_span</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># wing span(bh)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_wing_aspect_ratio</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># ARh</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_wing_taper_ratio</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># th</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_wing_tc</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the ratio of thickness and chord at horizontal wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_retreat_angle</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># thetah</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_wing_croot</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the root chord of horizontal wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_wing_ctip</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the tip chord of horizontal wing</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">horizontal_wing_area</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># Sh</span>
+
+        <span class="c1"># main landing gear</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">main_landing_gear_position</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the setting position of main landing gear(Lm)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_main_wheel</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the number of main wheel</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_main_gear_struts</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the number of main gear struts</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Vstall</span> <span class="o">=</span> <span class="mi">130</span>  <span class="c1"># stall velocity</span>
+
+        <span class="c1"># Nose landing gear</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">nose_landing_gear_position</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the setting position of nose landing gear(Ln)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_nose_wheel</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the number of nose wheel</span>
+
+        <span class="c1"># Nacelle</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine_number</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the number of jet engine</span>
+
+        <span class="c1"># Engine Control</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">engine_control_position</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the mounting position of engine control</span>
+
+        <span class="c1"># Flight Control</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_flight_control</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the number of flight control</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">exposed_wing_span</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># outer wing span (BW)</span>
+
+        <span class="c1"># Instrument</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">number_of_instrument</span> <span class="o">=</span> <span class="kc">None</span>  <span class="c1"># the number of instrument, jet engine(2.0), UAV(0.5)</span>
+
+
+<div class="viewcode-block" id="AircraftParams.setting_for_computation"><a class="viewcode-back" href="../aircraft_params.html#aircraft_params.AircraftParams.setting_for_computation">[docs]</a>    <span class="k">def</span> <span class="nf">setting_for_computation</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="sd">&quot;&quot;&quot;</span>
+
+<span class="sd">        calculate aircraft&#39;s configurations from given design variables</span>
+<span class="sd">        :return: None</span>
+<span class="sd">        &quot;&quot;&quot;</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AircraftParams.setting_for_view_by_database"><a class="viewcode-back" href="../aircraft_params.html#aircraft_params.AircraftParams.setting_for_view_by_database">[docs]</a>    <span class="k">def</span> <span class="nf">setting_for_view_by_database</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AircraftParams.setting_for_view_by_optimization"><a class="viewcode-back" href="../aircraft_params.html#aircraft_params.AircraftParams.setting_for_view_by_optimization">[docs]</a>    <span class="k">def</span> <span class="nf">setting_for_view_by_optimization</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
         <span class="sd">&quot;&quot;&quot;</span>
 
 <span class="sd">        :return: None</span>
 <span class="sd">        &quot;&quot;&quot;</span>
+
         <span class="k">pass</span></div></div>
 
 
@@ -183,6 +275,7 @@
 
     <span class="n">aircraft_name</span> <span class="o">=</span> <span class="s2">&quot;A320&quot;</span>
     <span class="n">ap</span> <span class="o">=</span> <span class="n">AircraftParams</span><span class="p">(</span><span class="n">aircraft_name</span><span class="p">)</span>
+
 
 
 </pre></div>

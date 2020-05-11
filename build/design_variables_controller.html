@@ -1,0 +1,458 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>design_variables_controller module &mdash; IAEA 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="./" src="_static/documentation_options.js"></script>
+        <script src="_static/jquery.js"></script>
+        <script src="_static/underscore.js"></script>
+        <script src="_static/doctools.js"></script>
+        <script src="_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="genindex.html" />
+    <link rel="search" title="Search" href="search.html" />
+    <link rel="next" title="engine_params module" href="engine_params.html" />
+    <link rel="prev" title="data_driven module" href="data_driven.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="index.html" class="icon icon-home"> IAEA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul class="current">
+<li class="toctree-l1 current"><a class="reference internal" href="modules.html">IAEA</a><ul class="current">
+<li class="toctree-l2"><a class="reference internal" href="aircraft_component.html">aircraft_component module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="aircraft_params.html">aircraft_params module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="data_driven.html">data_driven module</a></li>
+<li class="toctree-l2 current"><a class="current reference internal" href="#">design_variables_controller module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="engine_params.html">engine_params module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="physics.html">physics module</a></li>
+<li class="toctree-l2"><a class="reference internal" href="specification.html">specification module</a></li>
+</ul>
+</li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="index.html">IAEA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="modules.html">IAEA</a> &raquo;</li>
+        
+      <li>design_variables_controller module</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+            
+            <a href="_sources/design_variables_controller.rst.txt" rel="nofollow"> View page source</a>
+          
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <div class="section" id="module-design_variables_controller">
+<span id="design-variables-controller-module"></span><h1>design_variables_controller module<a class="headerlink" href="#module-design_variables_controller" title="Permalink to this headline">¶</a></h1>
+<dl class="py class">
+<dt id="design_variables_controller.AircraftFuselageDesignVariable">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">AircraftFuselageDesignVariable</code><a class="reference internal" href="_modules/design_variables_controller.html#AircraftFuselageDesignVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.AircraftFuselageDesignVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>Design Variable Controller Class for Aircraft Fuselage</p>
+</div>
+<dl class="option-list">
+<dt><kbd><span class="option">--Attributes--</span></kbd></dt>
+<dd><dl class="simple">
+<dt>aircraft_fuselage_dv_names: list</dt><dd><p>the list of fuselage design variables</p>
+</dd>
+<dt>aircraft_fuselage_dv_idx_dict: dict</dt><dd><p>dictionary in order to change name into index number</p>
+</dd>
+<dt>fuselage_dv_num: int</dt><dd><p>the number of fuselage design variables</p>
+</dd>
+<dt>aircraft_fuselage_boundaries: list[list]</dt><dd><p>the list which keeps the bounds list</p>
+</dd>
+<dt>aircraft_fuselage_fix_flags: list[bool]</dt><dd><p>the list which keeps boolean flag which indicates whether or not the value is fixed</p>
+</dd>
+<dt>fl_dv_sets: list[DesignVariableClass]</dt><dd><p>the list of design variable class</p>
+</dd>
+</dl>
+</dd>
+<dt><kbd><span class="option">--Method--</span></kbd></dt>
+<dd><p>set_bounds()</p>
+<p>set_fix()</p>
+<p>create_dv_sets()</p>
+</dd>
+</dl>
+<dl class="py method">
+<dt id="design_variables_controller.AircraftFuselageDesignVariable.create_dv_sets">
+<code class="sig-name descname">create_dv_sets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">aircraft_fuselage_dvs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#AircraftFuselageDesignVariable.create_dv_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.AircraftFuselageDesignVariable.create_dv_sets" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>aircraft_fuselage_dvs</strong> – list
+design variables vector</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="design_variables_controller.AircraftFuselageDesignVariable.set_bounds">
+<code class="sig-name descname">set_bounds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">bounds</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#AircraftFuselageDesignVariable.set_bounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.AircraftFuselageDesignVariable.set_bounds" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – str
+design variable name</p></li>
+<li><p><strong>bounds</strong> – list
+list of boundary condition(min, max)</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="design_variables_controller.AircraftFuselageDesignVariable.set_fix">
+<code class="sig-name descname">set_fix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">flag</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#AircraftFuselageDesignVariable.set_fix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.AircraftFuselageDesignVariable.set_fix" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><ul class="simple">
+<li><p><strong>name</strong> – str
+design variable name</p></li>
+<li><p><strong>flag</strong> – bool
+flag which means fix</p></li>
+</ul>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="design_variables_controller.AircraftPerformanceDesignVariable">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">AircraftPerformanceDesignVariable</code><a class="reference internal" href="_modules/design_variables_controller.html#AircraftPerformanceDesignVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.AircraftPerformanceDesignVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="design_variables_controller.AircraftWingDesignVariable">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">AircraftWingDesignVariable</code><a class="reference internal" href="_modules/design_variables_controller.html#AircraftWingDesignVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.AircraftWingDesignVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<dl class="py method">
+<dt id="design_variables_controller.AircraftWingDesignVariable.create_dv_sets">
+<code class="sig-name descname">create_dv_sets</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">aircraft_wing_dvs</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#AircraftWingDesignVariable.create_dv_sets"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.AircraftWingDesignVariable.create_dv_sets" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="design_variables_controller.AircraftWingDesignVariable.set_bounds">
+<code class="sig-name descname">set_bounds</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">bounds</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#AircraftWingDesignVariable.set_bounds"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.AircraftWingDesignVariable.set_bounds" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py method">
+<dt id="design_variables_controller.AircraftWingDesignVariable.set_fix">
+<code class="sig-name descname">set_fix</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em>, <em class="sig-param"><span class="n">flag</span><span class="o">=</span><span class="default_value">True</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#AircraftWingDesignVariable.set_fix"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.AircraftWingDesignVariable.set_fix" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="design_variables_controller.BLIDesignVariable">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">BLIDesignVariable</code><a class="reference internal" href="_modules/design_variables_controller.html#BLIDesignVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.BLIDesignVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="design_variables_controller.DesignVariable">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">DesignVariable</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">name</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#DesignVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.DesignVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+<div class="admonition note">
+<p class="admonition-title">Note</p>
+<p>if you want to view aircraft or engine, you should set real value and boundary condition
+if you want to optimize aircraft or engine, you should set normalized value and boundary condition</p>
+</div>
+<dl class="py method">
+<dt id="design_variables_controller.DesignVariable.denormalize">
+<code class="sig-name descname">denormalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#DesignVariable.denormalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.DesignVariable.denormalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>convert normalized value into real value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p></p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="design_variables_controller.DesignVariable.fixed">
+<code class="sig-name descname">fixed</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">fix_flag</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#DesignVariable.fixed"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.DesignVariable.fixed" title="Permalink to this definition">¶</a></dt>
+<dd><dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>fix_flag</strong> – boolean</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="design_variables_controller.DesignVariable.normalize">
+<code class="sig-name descname">normalize</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#DesignVariable.normalize"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.DesignVariable.normalize" title="Permalink to this definition">¶</a></dt>
+<dd><p>normalize real value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Returns</dt>
+<dd class="field-odd"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="design_variables_controller.DesignVariable.set_bound">
+<code class="sig-name descname">set_bound</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">bounds</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#DesignVariable.set_bound"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.DesignVariable.set_bound" title="Permalink to this definition">¶</a></dt>
+<dd><p>set boundary condition</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>bounds</strong> – [minimum value, maximum value]</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="design_variables_controller.DesignVariable.set_norm_val">
+<code class="sig-name descname">set_norm_val</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">norm_val</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#DesignVariable.set_norm_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.DesignVariable.set_norm_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>set design variable normalized value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>norm_val</strong> – the normalized value of design variable</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+<dl class="py method">
+<dt id="design_variables_controller.DesignVariable.set_val">
+<code class="sig-name descname">set_val</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">val</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#DesignVariable.set_val"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.DesignVariable.set_val" title="Permalink to this definition">¶</a></dt>
+<dd><p>set design variable’s real value</p>
+<dl class="field-list simple">
+<dt class="field-odd">Parameters</dt>
+<dd class="field-odd"><p><strong>val</strong> – the value of design variable</p>
+</dd>
+<dt class="field-even">Returns</dt>
+<dd class="field-even"><p>None</p>
+</dd>
+</dl>
+</dd></dl>
+
+</dd></dl>
+
+<dl class="py class">
+<dt id="design_variables_controller.DesignVariablesController">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">DesignVariablesController</code><span class="sig-paren">(</span><em class="sig-param"><span class="n">aircraft_params_class</span></em>, <em class="sig-param"><span class="n">engine_params_class</span></em><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#DesignVariablesController"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.DesignVariablesController" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="design_variables_controller.EngineDesignVariable">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">EngineDesignVariable</code><a class="reference internal" href="_modules/design_variables_controller.html#EngineDesignVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.EngineDesignVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="design_variables_controller.JointAircraftDesignVariable">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">JointAircraftDesignVariable</code><a class="reference internal" href="_modules/design_variables_controller.html#JointAircraftDesignVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.JointAircraftDesignVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="design_variables_controller.JointEngineDesignVariable">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">JointEngineDesignVariable</code><a class="reference internal" href="_modules/design_variables_controller.html#JointEngineDesignVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.JointEngineDesignVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py class">
+<dt id="design_variables_controller.MissionDesignVariable">
+<em class="property">class </em><code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">MissionDesignVariable</code><a class="reference internal" href="_modules/design_variables_controller.html#MissionDesignVariable"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.MissionDesignVariable" title="Permalink to this definition">¶</a></dt>
+<dd><p>Bases: <code class="xref py py-class docutils literal notranslate"><span class="pre">object</span></code></p>
+</dd></dl>
+
+<dl class="py function">
+<dt id="design_variables_controller.main">
+<code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">main</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#main"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.main" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+<dl class="py function">
+<dt id="design_variables_controller.main_">
+<code class="sig-prename descclassname">design_variables_controller.</code><code class="sig-name descname">main_</code><span class="sig-paren">(</span><span class="sig-paren">)</span><a class="reference internal" href="_modules/design_variables_controller.html#main_"><span class="viewcode-link">[source]</span></a><a class="headerlink" href="#design_variables_controller.main_" title="Permalink to this definition">¶</a></dt>
+<dd></dd></dl>
+
+</div>
+
+
+           </div>
+           
+          </div>
+          <footer>
+  
+    <div class="rst-footer-buttons" role="navigation" aria-label="footer navigation">
+      
+        <a href="engine_params.html" class="btn btn-neutral float-right" title="engine_params module" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right"></span></a>
+      
+      
+        <a href="data_driven.html" class="btn btn-neutral float-left" title="data_driven module" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left"></span> Previous</a>
+      
+    </div>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, tatsuro murata
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>

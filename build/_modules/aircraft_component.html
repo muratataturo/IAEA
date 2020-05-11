@@ -1,0 +1,338 @@
+
+
+<!DOCTYPE html>
+<!--[if IE 8]><html class="no-js lt-ie9" lang="en" > <![endif]-->
+<!--[if gt IE 8]><!--> <html class="no-js" lang="en" > <!--<![endif]-->
+<head>
+  <meta charset="utf-8">
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  
+  <title>aircraft_component &mdash; IAEA 1.0.0 documentation</title>
+  
+
+  
+  
+  
+  
+
+  
+  <script type="text/javascript" src="../_static/js/modernizr.min.js"></script>
+  
+    
+      <script type="text/javascript" id="documentation_options" data-url_root="../" src="../_static/documentation_options.js"></script>
+        <script src="../_static/jquery.js"></script>
+        <script src="../_static/underscore.js"></script>
+        <script src="../_static/doctools.js"></script>
+        <script src="../_static/language_data.js"></script>
+    
+    <script type="text/javascript" src="../_static/js/theme.js"></script>
+
+    
+
+  
+  <link rel="stylesheet" href="../_static/css/theme.css" type="text/css" />
+  <link rel="stylesheet" href="../_static/pygments.css" type="text/css" />
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" /> 
+</head>
+
+<body class="wy-body-for-nav">
+
+   
+  <div class="wy-grid-for-nav">
+    
+    <nav data-toggle="wy-nav-shift" class="wy-nav-side">
+      <div class="wy-side-scroll">
+        <div class="wy-side-nav-search" >
+          
+
+          
+            <a href="../index.html" class="icon icon-home"> IAEA
+          
+
+          
+          </a>
+
+          
+            
+            
+          
+
+          
+<div role="search">
+  <form id="rtd-search-form" class="wy-form" action="../search.html" method="get">
+    <input type="text" name="q" placeholder="Search docs" />
+    <input type="hidden" name="check_keywords" value="yes" />
+    <input type="hidden" name="area" value="default" />
+  </form>
+</div>
+
+          
+        </div>
+
+        <div class="wy-menu wy-menu-vertical" data-spy="affix" role="navigation" aria-label="main navigation">
+          
+            
+            
+              
+            
+            
+              <p class="caption"><span class="caption-text">Contents:</span></p>
+<ul>
+<li class="toctree-l1"><a class="reference internal" href="../modules.html">IAEA</a></li>
+</ul>
+
+            
+          
+        </div>
+      </div>
+    </nav>
+
+    <section data-toggle="wy-nav-shift" class="wy-nav-content-wrap">
+
+      
+      <nav class="wy-nav-top" aria-label="top navigation">
+        
+          <i data-toggle="wy-nav-top" class="fa fa-bars"></i>
+          <a href="../index.html">IAEA</a>
+        
+      </nav>
+
+
+      <div class="wy-nav-content">
+        
+        <div class="rst-content">
+        
+          
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<div role="navigation" aria-label="breadcrumbs navigation">
+
+  <ul class="wy-breadcrumbs">
+    
+      <li><a href="../index.html">Docs</a> &raquo;</li>
+        
+          <li><a href="index.html">Module code</a> &raquo;</li>
+        
+      <li>aircraft_component</li>
+    
+    
+      <li class="wy-breadcrumbs-aside">
+        
+      </li>
+    
+  </ul>
+
+  
+  <hr/>
+</div>
+          <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
+           <div itemprop="articleBody">
+            
+  <h1>Source code for aircraft_component</h1><div class="highlight"><pre>
+<span></span>
+<div class="viewcode-block" id="MainWing"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.MainWing">[docs]</a><span class="k">class</span> <span class="nc">MainWing</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="HorizontalWing"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.HorizontalWing">[docs]</a><span class="k">class</span> <span class="nc">HorizontalWing</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="c1"># constant</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Khut</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ky</span> <span class="o">=</span> <span class="mf">17.7</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Se</span> <span class="o">=</span> <span class="mf">116.795</span></div>
+
+
+<div class="viewcode-block" id="VerticalWing"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.VerticalWing">[docs]</a><span class="k">class</span> <span class="nc">VerticalWing</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Hthv</span> <span class="o">=</span> <span class="mf">0.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Kz</span> <span class="o">=</span> <span class="mf">59.0</span></div>
+
+
+
+
+<div class="viewcode-block" id="Fuselage"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.Fuselage">[docs]</a><span class="k">class</span> <span class="nc">Fuselage</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Kdoor</span> <span class="o">=</span> <span class="mf">1.06</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Klg</span> <span class="o">=</span> <span class="mf">1.12</span></div>
+
+
+
+<div class="viewcode-block" id="MainLandingGear"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.MainLandingGear">[docs]</a><span class="k">class</span> <span class="nc">MainLandingGear</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="bp">self</span><span class="o">.</span><span class="n">Kmp</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nl</span> <span class="o">=</span> <span class="mf">5.25</span></div>
+
+
+<div class="viewcode-block" id="NoseLandingGear"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.NoseLandingGear">[docs]</a><span class="k">class</span> <span class="nc">NoseLandingGear</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Knp</span> <span class="o">=</span> <span class="mf">1.0</span></div>
+
+
+<div class="viewcode-block" id="Nacelle"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.Nacelle">[docs]</a><span class="k">class</span> <span class="nc">Nacelle</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Kng</span> <span class="o">=</span> <span class="mf">1.017</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nlt</span> <span class="o">=</span> <span class="mf">17.25</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nw</span> <span class="o">=</span> <span class="mf">5.8</span></div>
+
+
+<div class="viewcode-block" id="EngineControl"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.EngineControl">[docs]</a><span class="k">class</span> <span class="nc">EngineControl</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Starter"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.Starter">[docs]</a><span class="k">class</span> <span class="nc">Starter</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="FuelSystem"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.FuelSystem">[docs]</a><span class="k">class</span> <span class="nc">FuelSystem</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="FlightControl"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.FlightControl">[docs]</a><span class="k">class</span> <span class="nc">FlightControl</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Nm</span> <span class="o">=</span> <span class="mf">0.0</span></div>
+
+
+<div class="viewcode-block" id="APU"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.APU">[docs]</a><span class="k">class</span> <span class="nc">APU</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Instrument"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.Instrument">[docs]</a><span class="k">class</span> <span class="nc">Instrument</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Kr</span> <span class="o">=</span> <span class="mf">1.0</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">Ktp</span> <span class="o">=</span> <span class="mf">1.0</span></div>
+
+
+
+<div class="viewcode-block" id="Hydraulics"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.Hydraulics">[docs]</a><span class="k">class</span> <span class="nc">Hydraulics</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Electric"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.Electric">[docs]</a><span class="k">class</span> <span class="nc">Electric</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Avionic"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.Avionic">[docs]</a><span class="k">class</span> <span class="nc">Avionic</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Furnishing"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.Furnishing">[docs]</a><span class="k">class</span> <span class="nc">Furnishing</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AirConditioner"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.AirConditioner">[docs]</a><span class="k">class</span> <span class="nc">AirConditioner</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="AntiIce"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.AntiIce">[docs]</a><span class="k">class</span> <span class="nc">AntiIce</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="HandlingGear"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.HandlingGear">[docs]</a><span class="k">class</span> <span class="nc">HandlingGear</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="Engine"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.Engine">[docs]</a><span class="k">class</span> <span class="nc">Engine</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">pass</span></div>
+
+
+<div class="viewcode-block" id="PassengerEquip"><a class="viewcode-back" href="../aircraft_component.html#aircraft_component.PassengerEquip">[docs]</a><span class="k">class</span> <span class="nc">PassengerEquip</span><span class="p">(</span><span class="nb">object</span><span class="p">):</span>
+
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">):</span>
+
+        <span class="k">pass</span></div>
+</pre></div>
+
+           </div>
+           
+          </div>
+          <footer>
+  
+
+  <hr/>
+
+  <div role="contentinfo">
+    <p>
+        &copy; Copyright 2020, tatsuro murata
+
+    </p>
+  </div>
+  Built with <a href="http://sphinx-doc.org/">Sphinx</a> using a <a href="https://github.com/rtfd/sphinx_rtd_theme">theme</a> provided by <a href="https://readthedocs.org">Read the Docs</a>. 
+
+</footer>
+
+        </div>
+      </div>
+
+    </section>
+
+  </div>
+  
+
+
+  <script type="text/javascript">
+      jQuery(function () {
+          SphinxRtdTheme.Navigation.enable(true);
+      });
+  </script>
+
+  
+  
+    
+   
+
+</body>
+</html>
