@@ -114,6 +114,7 @@ class AircraftFuselageDesignVariable(object):
 
     def __init__(self):
         self.aircraft_fuselage_dv_names = ['fuselage_length', 's1_h', 's2_h', 's3_h', 's1_v', 's2_v', 's3_v']
+        # create dictionary combined with name and index number
         self.aircraft_fuselage_dv_idx_dict = {}
         for idx, name in enumerate(self.aircraft_fuselage_dv_names):
             self.aircraft_fuselage_dv_idx_dict[name] = idx
@@ -176,6 +177,11 @@ class AircraftWingDesignVariable(object):
                                   'horizontal wing retreat angle', 'vertical wing span', 'vertical wing AR',
                                   'vertical wing taper ratio', 'vertical wing tc ratio', 'vertical wing retreat angle']
 
+        # create dictionary combined with name and index number
+        self.aircraft_wing_dv_idx_dict = {}
+        for idx, name in enumerate(self.aircraft_wing_dv_names):
+            self.aircraft_wing_dv_idx_dict[name] = idx
+
         self.aircraft_wing_boundaries = [[30, 40],
                                     [8, 10],
                                     [0.2, 0.3],
@@ -196,50 +202,514 @@ class AircraftWingDesignVariable(object):
 
         self.aircraft_wing_fix_flags = [False for _ in range(self.aircraft_wing_dv_num)]
 
+        # Initialize aircraft wing dv sets
+        self.aw_dv_sets = [DesignVariable(name) for name in self.aircraft_wing_dv_names]
+
     def set_bounds(self, name, bounds):
-        pass
+        """
+        replace boundary condition
+
+        :param name: str
+                     design variable name
+        :param bounds: list
+                       list which contains minimum and maximum value
+        :return: None
+        """
+        idx = self.aircraft_wing_dv_idx_dict[name]
+        self.aircraft_wing_boundaries[idx] = bounds
 
     def set_fix(self, name, flag=True):
-        pass
+        """
+        decide how to cope with each design variable
+
+        :param name: str
+                     design variable name
+        :param flag: Boolean
+                     flag which indicates whether or not design variable is fixed
+        :return: None
+        """
+        idx = self.aircraft_wing_dv_idx_dict[name]
+        self.aircraft_wing_fix_flags[idx] = flag
 
     def create_dv_sets(self, aircraft_wing_dvs):
-        pass
+        """
+        create design variable sets
+
+        :param aircraft_wing_dvs: list
+                                  list which has the sets of design variable value
+        :return: None
+        """
+
+        # set aircraft wing dv sets
+        for idx, ad in enumerate(self.aw_dv_sets):
+            ad.set_val(aircraft_wing_dvs[idx])
+            ad.set_bound(self.aircraft_wing_boundaries[idx])
+            ad.fixed(self.aircraft_wing_fix_flags[idx])
 
 # Aircraft performance design variable class
 class AircraftPerformanceDesignVariable(object):
 
     def __init__(self):
-        pass
+        self.aircraft_performance_dv_names = ['attack of angle']
+        self.aircraft_performance_dv_idx_dict = {}
+        for idx, name in enumerate(self.aircraft_performance_dv_names):
+            self.aircraft_performance_dv_idx_dict[name] = idx
+        self.aircraft_performance_boundaries = [[0, 6]]
+        self.aircraft_performance_dv_num = len(self.aircraft_performance_dv_names)
+        self.aircraft_performance_fix_flags = [False for _ in range(self.aircraft_performance_dv_num)]
+
+        # Initialize the aircraft performance dv sets
+        self.ap_dv_sets = [DesignVariable(name) for name in self.aircraft_performance_dv_names]
+
+    def set_bounds(self, name, bounds):
+        """
+        replace boundary condition
+
+        :param name: str
+                     design variable name
+        :param bounds: list
+                       list which contains minimum and maximum value
+        :return: None
+        """
+        idx = self.aircraft_performance_dv_idx_dict[name]
+        self.aircraft_performance_boundaries[idx] = bounds
+
+    def set_fix(self, name, flag=True):
+        """
+        decide how to cope with each design variable
+
+        :param name: str
+                     design variable name
+        :param flag: Boolean
+                     flag which indicates whether or not design variable is fixed
+        :return: None
+        """
+        idx = self.aircraft_performance_dv_idx_dict[name]
+        self.aircraft_performance_fix_flags[idx] = flag
+
+    def create_dv_sets(self, aircraft_performance_dvs):
+        """
+        create design variable sets
+
+        :param aircraft_wing_dvs: list
+                                  list which has the sets of design variable value
+        :return: None
+        """
+
+        # set aircraft wing dv sets
+        for idx, ad in enumerate(self.ap_dv_sets):
+            ad.set_val(aircraft_performance_dvs[idx])
+            ad.set_bound(self.aircraft_performance_boundaries[idx])
+            ad.fixed(self.aircraft_performance_fix_flags[idx])
+
 
 # Engine design variable class
 class EngineDesignVariable(object):
 
     def __init__(self):
-        pass
+        self.engine_dv_names = ['OPR', 'TIT', 'BPR', 'FPR', 'Nen', 'technical level', 'cool air lpt rate',
+                           'cool air hpt rate',
+                           'engine material quality', 'fan stage number', 'lpc stage number', 'hpc stage number',
+                           'hpt stage number', 'lpt stage number', 'fan load factor', 'lpc load factor',
+                           'hpc load factor',
+                           'hpt load factor', 'lpt load factor', 'BPRe', 'FPRe', 'Nfan', 'engine electric efficiency',
+                           'engine electric density']
+
+        self.engine_dv_idx_dict = {}
+
+        for idx, name in enumerate(self.engine_dv_names):
+            self.engine_dv_idx_dict[name] = idx
+
+        self.engine_boundaries = [[20, 40],  # OPR
+                             [1200, 1500],  # TIT
+                             [2, 8],  # BPR
+                             [1.2, 1.7],  # FPR
+                             [1, 4],  # Nen
+                             [3, 4],  # tech lev
+                             [0.0, 0.1],  # cool air lpt
+                             [0.0, 0.2],  # cool air hpt
+                             [0.5, 1.0],  # engine material quality
+                             [1, 2],  # fan stage number
+                             [2, 4],  # lpc stage number
+                             [8, 10],  # hpc stage number
+                             [1, 3],  # hpt stage number
+                             [1, 5],  # lpt stage number
+                             [0.1, 0.4],  # fan load factor
+                             [0.1, 0.4],  # lpc load factor
+                             [0.3, 0.5],  # hpc load factor
+                             [1.3, 1.6],  # hpt load factor
+                             [1.3, 1.6],  # lpt load factor
+                             [0, 10],  # BPRe
+                             [0, 1.5],  # FPRe
+                             [1, 10],  # Nfan
+                             [0.9, 0.99],  # eng_electriceff
+                             [0.052, 0.52]  # eng_electric_dense
+                             ]
+
+        self.engine_dv_num = len(self.engine_dv_names)
+
+        self.engine_fix_flags = [False for _ in range(self.engine_dv_num)]
+
+        self.e_dv_sets = [DesignVariable(name) for name in self.engine_dv_names]
+
+    def set_bounds(self, name, bounds):
+        """
+        replace boundary condition
+
+        :param name: str
+                     design variable name
+        :param bounds: list
+                       list which contains minimum and maximum value
+        :return: None
+        """
+        idx = self.engine_dv_idx_dict[name]
+        self.engine_boundaries[idx] = bounds
+
+    def set_fix(self, name, flag=True):
+        """
+        decide how to cope with design variable
+
+        :param name: str
+                     design variable name
+        :param flag: boolean
+                     flag which indicates whether or not design variable is fixed
+        :return: None
+        """
+        idx = self.engine_dv_idx_dict[name]
+        self.engine_fix_flags[idx] = flag
+
+    def create_dv_sets(self, engine_dvs):
+        """
+        create design variable sets
+
+        :param engine_dvs: list
+                           the set of engine design variable's value
+        :return: None
+        """
+        for idx, ed in enumerate(self.e_dv_sets):
+            ed.set_val(engine_dvs[idx])
+            ed.set_bound(self.engine_boundaries[idx])
+            ed.fixed(self.engine_fix_flags[idx])
+
 
 # Joint Aircraft design variable class
 class JointAircraftDesignVariable(object):
 
     def __init__(self):
-        pass
+        self.aircraft_mounting_dv_names = ['main wing coefficient x', 'main wing coefficient z',
+                                      'horizontal wing coefficient x',
+                                      'horizontal wing coefficient z', 'vertical wing coefficient x',
+                                      'vertical wing coefficient z']
+
+        self.aircraft_mounting_dv_idx_dict = {}
+
+        for idx, name in enumerate(self.aircraft_mounting_dv_names):
+            self.aircraft_mounting_dv_idx_dict[name] = idx
+
+        self.aircraft_mounting_boundaries = [[0, 1],
+                                        [0, 1],
+                                        [0, 1],
+                                        [0, 1],
+                                        [0, 1],
+                                        [0, 1]]
+
+        self.aircraft_mounting_dv_num = len(self.aircraft_mounting_dv_names)
+        self.aircraft_mounting_fix_flags = [False for _ in range(self.aircraft_mounting_dv_num)]
+
+        self.am_dv_sets = [DesignVariable(name) for name in self.aircraft_mounting_dv_names]
+
+    def set_bounds(self, name, bounds):
+        """
+        replace boundary condition
+
+        :param name: str
+                     design variable name
+        :param bounds: list
+                       list which contains minimum and maximum value
+        :return: None
+        """
+        idx = self.aircraft_mounting_dv_idx_dict[name]
+        self.aircraft_mounting_boundaries[idx] = bounds
+
+    def set_fix(self, name, flag=True):
+        """
+        decide how to cope with design variable
+
+        :param name: str
+                     design variable name
+        :param flag: boolean
+                     flag which indicates whether or not design variable is fixed
+        :return: None
+        """
+        idx = self.aircraft_mounting_dv_idx_dict[name]
+        self.aircraft_mounting_fix_flags[idx] = flag
+
+    def create_dv_sets(self, aircraft_mounting_dvs):
+        """
+        create design variable sets
+
+        :param aircraft_mounting_dvs: list
+                           the set of engine design variable's value
+        :return: None
+        """
+
+        for idx, amd in enumerate(self.am_dv_sets):
+            amd.set_val(aircraft_mounting_dvs[idx])
+            amd.set_bound(self.aircraft_mounting_boundaries[idx])
+            amd.fixed(self.aircraft_mounting_fix_flags[idx])
+
+
 
 # Joint Engine design variable class
 class JointEngineDesignVariable(object):
 
     def __init__(self):
-        pass
+        self.engine_mounting_dv_names = ['core engine mounting coefficient x', 'core engine mounting coefficient y',
+                                    'core engine moiunting turnover angle', 'core engine sign',
+                                    'distributed engine mounting coefficient x',
+                                    'distributed engine mounting coefficient y',
+                                    'distributed engine mounting turnover angle', 'distributed engine sign']
+
+        self.engine_mounting_dv_idx_dict = {}
+
+        for idx, name in enumerate(self.engine_mounting_dv_names):
+            self.engine_mounting_dv_idx_dict[name] = idx
+
+        self.engine_mounting_boundaries = [[0, 1],
+                                      [0, 1],
+                                      [0, 90],
+                                      [-1, 1],
+                                      [0, 1],
+                                      [0, 1],
+                                      [0, 90],
+                                      [-1, 1]]
+
+        self.engine_mounting_dv_num = len(self.engine_mounting_dv_names)
+        self.engine_mounting_fix_flags = [False for _ in range(self.engine_mounting_dv_num)]
+
+        self.em_dv_sets = [DesignVariable(name) for name in self.engine_mounting_dv_names]
+
+    def set_bounds(self, name, bounds):
+        """
+        replace boundary condition
+
+        :param name: str
+                     design variable name
+        :param bounds: list
+                       list which contains minimum and maximum value
+        :return: None
+        """
+        idx = self.engine_mounting_dv_idx_dict[name]
+        self.engine_mounting_boundaries[idx] = bounds
+
+    def set_fix(self, name, flag=True):
+        """
+        decide how to cope with design variable
+
+        :param name: str
+                     design variable name
+        :param flag: boolean
+                     flag which indicates whether or not design variable is fixed
+        :return: None
+        """
+        idx = self.engine_mounting_dv_idx_dict[name]
+        self.engine_mounting_fix_flags[idx] = flag
+
+    def create_dv_sets(self, engine_mounting_dvs):
+        """
+        create design variable sets
+
+        :param engine_mounting_dvs: list
+                                    the sets of design variable value
+        :return: None
+        """
+
+        for idx, emd in enumerate(self.em_dv_sets):
+            emd.set_val(engine_mounting_dvs[idx])
+            emd.set_bound(self.engine_mounting_boundaries[idx])
+            emd.fixed(self.engine_mounting_fix_flags[idx])
+
+# Electric design variable class
+class ElectricDesignVariable(object):
+
+    def __init__(self):
+        self.electric_dv_names = ['material level', 'battery electric density']
+
+        self.electric_dv_idx_dict = {}
+
+        for idx, name in enumerate(self.electric_dv_names):
+            self.electric_dv_idx_dict[name] = idx
+
+        self.electric_boundaries = [[0.1, 1.0], [5.2, 10.0]]
+
+        self.electric_dv_num = len(self.electric_dv_names)
+        self.electric_fix_flags = [False for _ in range(self.electric_dv_num)]
+
+        self.e_dv_sets = [DesignVariable(name) for name in self.electric_dv_names]
+
+    def set_bounds(self, name, bounds):
+        """
+        replace boundary condition
+
+        :param name: str
+                     design variable name
+        :param bounds: list
+                       list which contains minimum and maximum value
+        :return: None
+        """
+        idx = self.electric_dv_idx_dict[name]
+        self.electric_boundaries[idx] = bounds
+
+    def set_fix(self, name, flag=True):
+        """
+        decide how to cope with design variable
+
+        :param name: str
+                     design variable name
+        :param flag: boolean
+                     flag which indicates whether or not design variable is fixed
+        :return: None
+        """
+        idx = self.electric_dv_idx_dict[name]
+        self.electric_fix_flags[idx] = flag
+
+    def create_dv_sets(self, electric_dvs):
+        """
+        create design variable sets
+
+        :param electric_dvs: list
+                             the sets of design variable value
+        :return: None
+        """
+        for idx, ed in enumerate(self.e_dv_sets):
+            ed.set_val(electric_dvs[idx])
+            ed.set_bound(self.electric_boundaries[idx])
+            ed.fixed(self.electric_fix_flags[idx])
+
 
 # BLI design variable class
 class BLIDesignVariable(object):
 
     def __init__(self):
-        pass
+        self.bli_dv_names = ['distortion angle']
+        self.bli_dv_idx_dict = {}
+
+        for idx, name in enumerate(self.bli_dv_names):
+            self.bli_dv_idx_dict[name] = idx
+
+        self.bli_boundaries = [[0, 120]]
+        self.bli_dv_num = len(self.bli_dv_names)
+        self.bli_fix_flags = [False for _ in range(self.bli_dv_num)]
+
+        self.bli_dv_sets = [DesignVariable(name) for name in self.bli_dv_names]
+
+    def set_bounds(self, name, bounds):
+        """
+        replace boundary condition
+
+        :param name: str
+                     design variable name
+        :param bounds: list
+                       list which contains minimum and maximum value
+        :return: None
+        """
+        idx = self.bli_dv_idx_dict[name]
+        self.bli_boundaries[idx] = bounds
+
+    def set_fix(self, name, flag=True):
+        """
+        decide how to cope with design variable
+
+        :param name: str
+                     design variable name
+        :param flag: boolean
+                     flag which indicates whether or not design variable is fixed
+        :return: None
+        """
+        idx = self.bli_dv_idx_dict[name]
+        self.bli_fix_flags[idx] = flag
+
+    def create_dv_sets(self, bli_dvs):
+        """
+        create design variable sets
+
+        :param bli_dvs: list
+                        the sets of design variable value
+        :return: None
+        """
+        for idx, bld in enumerate(self.bli_dv_sets):
+            bld.set_val(bli_dvs[idx])
+            bld.set_bound(self.bli_boundaries[idx])
+            bld.fixed(self.bli_fix_flags[idx])
+
 
 # Mission design variable class
 class MissionDesignVariable(object):
 
     def __init__(self):
-        pass
+        self.mission_dv_names = ['altitude', 'mach number', 'thrust at off design point', 'lift by drag', 'cruise range',
+                            'max takeoff weight', 'passenger number', 'fuel coefficient', 'cargo weight',
+                            'cargo volume']
+
+        self.mission_dv_idx_dict = {}
+
+        for idx, name in enumerate(self.mission_dv_names):
+            self.mission_dv_idx_dict[name] = idx
+
+        self.mission_boundaries = [[10000, 14000],
+                              [0.7, 0.9],
+                              [120000, 150000],
+                              [15, 17],
+                              [4500, 5000],
+                              [75000, 80000],
+                              [100, 200],
+                              [0.4, 0.7],
+                              [6000, 7000],
+                              [30, 40]]
+
+        self.mission_dv_num = len(self.mission_dv_names)
+        self.mission_fix_flags = [False for _ in range(self.mission_dv_num)]
+
+        self.m_dv_sets = [DesignVariable(name) for name in self.mission_dv_names]
+
+    def set_bounds(self, name, bounds):
+        """
+        replace boundary condition
+
+        :param name: str
+                     design variable name
+        :param bounds: list
+                       list which contains minimum and maximum value
+        :return: None
+        """
+        idx = self.mission_dv_idx_dict[name]
+        self.mission_boundaries[idx] = bounds
+
+    def set_fix(self, name, flag=True):
+        """
+        decide how to cope with design variable
+
+        :param name: str
+                     design variable name
+        :param flag: boolean
+                     flag which indicates whether or not design variable is fixed
+        :return: None
+        """
+        idx = self.mission_dv_idx_dict[name]
+        self.mission_fix_flags[idx] = flag
+
+    def create_dv_sets(self, mission_dvs):
+        """
+        create design variable sets
+
+        :param mission_dvs: list
+                            the sets of design variable value
+        :return: None
+        """
+        for idx, md in enumerate(self.m_dv_sets):
+            md.set_val(mission_dvs[idx])
+            md.set_bound(self.mission_boundaries[idx])
+            md.fixed(self.mission_fix_flags[idx])
 
 
 
@@ -252,7 +722,31 @@ class DesignVariablesController(object):
         self.aircraft_params_class = aircraft_params_class
         self.engine_params_class = engine_params_class
 
-        # set aircraft parameter from design variables
+        # start index(s_idx) and final index(f_idx) for each design variables
+        # fuselage
+        self.fl_s_idx = 0
+        self.fl_f_idx = 0
+        # wing
+        self.wi_s_idx = 0
+        self.wi_f_idx = 0
+        # performance
+        self.pf_s_idx = 0
+        self.pf_f_idx = 0
+        # engine
+        self.e_s_idx = 0
+        self.e_f_idx = 0
+        # joint aircraft
+        self.ja_s_idx = 0
+        self.ja_f_idx = 0
+        # join engine
+        self.je_s_idx = 0
+        self.je_f_idx = 0
+        # BLI
+        self.bli_s_idx = 0
+        self.bli_f_idx = 0
+        # mission
+        self.ms_s_idx = 0
+        self.ms_f_idx = 0
 
 
 # test code
@@ -282,89 +776,6 @@ def main():
     print('')
 
     # build aircraft wing design variable class
-
-    # build aircraft performance design variable class
-
-    # build joint aircraft design variable class
-
-    # build joint engine design variable class
-
-    # build BLI design variable class
-
-    # build mission design variable class
-
-    pass
-
-
-def main_():
-
-    # unit change
-    m_to_ft = 3.28084
-    kg_to_lb = 2.204621
-
-    design_variables = []
-
-    # aircraft design variables
-    # fuselage part, section1: cockpit, section2: cabin, section3: after cabin
-    aircraft_fuselage_dv_names = ['fuselage_length', 's1_h', 's2_h', 's3_h', 's1_v', 's2_v', 's3_v']
-    aircraft_fuselage_boundaries = [[30, 40], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1], [0, 1]]
-    aircraft_fuselage_fixed_flags = [False, False, False, False, False, False, False]
-    fuselage_length = 37.57  # [m]
-    s1_h = 0.05  # section 1 horizontal coefficient
-    s2_h = 0.105  # section 2 horizontal coefficient
-    s3_h = 0.05  # section 3 horizontal coefficient
-    s1_v = 0.2  # section 1 vertical coefficient
-    s2_v = 0.6  # section 2 vertical coefficient
-    s3_v = 0.2  # section 3 vertical coefficient
-    aircraft_fuselage_dvs = [fuselage_length, s1_h, s2_h, s3_h, s1_v, s2_v, s3_v]
-
-    # Initialize design variables set
-    fl_dv_sets = [DesignVariable(name) for name in aircraft_fuselage_dv_names]
-
-    # set design variable class
-    for idx, fd in enumerate(fl_dv_sets):
-        # set design variables
-        fd.set_val(aircraft_fuselage_dvs[idx])
-        # set boundaries
-        fd.set_bound(aircraft_fuselage_boundaries[idx])
-        # set fixed flag
-        fd.fixed(aircraft_fuselage_fixed_flags[idx])
-
-    print(fl_dv_sets[0].val)
-    print(fl_dv_sets[0].bound)
-    print(fl_dv_sets[0].fix)
-
-    fl_bs_index, fl_bf_index = 0, len(aircraft_fuselage_dvs)
-
-
-    # wing part
-    aircraft_wing_dv_names = ['main wing span', 'main wing AR', 'main wing taper ratio', 'main wing tc ratio',
-                              'main wing retreat angle', 'horizontal wing span', 'horizontal wing aspect ratio',
-                              'horizontal wing taper ratio', 'horizontal wing tc ratio',
-                              'horizontal wing retreat angle', 'vertical wing span', 'vertical wing AR',
-                              'vertical wing taper ratio', 'vertical wing tc ratio', 'vertical wing retreat angle']
-
-
-    aircraft_wing_boundaries = [[30, 40],
-                                [8, 10],
-                                [0.2, 0.3],
-                                [0.1, 0.2],
-                                [20, 30],
-                                [10, 15],
-                                [1.5, 3.0],
-                                [0.2, 0.3],
-                                [0.1, 0.2],
-                                [25, 35],
-                                [5, 10],
-                                [1.0, 2.0],
-                                [0.2, 0.3],
-                                [0.1, 0.2],
-                                [40, 50]]
-
-    aircraft_wing_dv_num = len(aircraft_wing_dv_names)
-
-    aircraft_wing_fixed_flags = [False for _ in range(aircraft_wing_dv_num)]
-
     bm = 34.1  # main wing span [m]
     ARm = 9.5  # main wing aspect ratio
     tm = 0.24  # taper ratio
@@ -385,74 +796,37 @@ def main_():
 
     aircraft_wing_dvs = [bm, ARm, tm, tcm, thetam, bh, ARh, th, tch, thetah, bv, ARv, tv, tcv, thetav]
 
-    # Initialize aircraft wing dv sets
-    aw_dv_sets = [DesignVariable(name) for name in aircraft_wing_dv_names]
+    # Initialization
+    awdv = AircraftWingDesignVariable()
+    awdv.create_dv_sets(aircraft_wing_dvs)
 
-    # set aircraft wing dv sets
-    for idx, ad in enumerate(aw_dv_sets):
+    # confirmation
+    print('')
+    print('aircraft wing class')
+    for u in awdv.aw_dv_sets:
+        print(u.val)
+        print(u.bound)
+        print(u.fix)
+    print('')
 
-        ad.set_val(aircraft_wing_dvs[idx])
-        ad.set_bound(aircraft_wing_boundaries[idx])
-        ad.fixed(aircraft_wing_fixed_flags[idx])
-
-    w_bs_index, w_bf_index = fl_bf_index, len(aircraft_wing_dvs) + fl_bf_index
-
-
-    # aircraft performance part
-    aircraft_performance_dv_names = ['attack of angle']
-    aircraft_performance_boundaries = [[0, 6]]
+    # build aircraft performance design variable class
     aoa = 4  # attack of angle
     aircraft_performance_dvs = [aoa]
 
-    # Initialize the aircraft performance dv sets
-    ap_dv_sets = [DesignVariable(name) for name in aircraft_performance_dv_names]
+    # Initialization
+    apdv = AircraftPerformanceDesignVariable()
+    apdv.create_dv_sets(aircraft_performance_dvs)
 
-    for idx, ad in enumerate(ap_dv_sets):
+    # confirmation
+    print('')
+    print('aircraft performance class')
+    for u in apdv.ap_dv_sets:
+        print(u.val)
+        print(u.bound)
+        print(u.fix)
+    print('')
 
-        ad.set_val(aircraft_performance_dvs[idx])
-        ad.set_bound(aircraft_performance_boundaries[idx])
-
-    pf_bs_index, pf_bf_index = w_bf_index, w_bf_index + len(aircraft_performance_dvs)
-
-
-    # engine design variables
-
-    engine_dv_names = ['OPR', 'TIT', 'BPR', 'FPR', 'Nen', 'technical level', 'cool air lpt rate', 'cool air hpt rate',
-                       'engine material quality', 'fan stage number', 'lpc stage number', 'hpc stage number',
-                       'hpt stage number', 'lpt stage number', 'fan load factor', 'lpc load factor', 'hpc load factor',
-                       'hpt load factor', 'lpt load factor', 'BPRe', 'FPRe', 'Nfan', 'engine electric efficiency',
-                       'engine electric density']
-
-    engine_boundaries = [[20, 40],  # OPR
-                         [1200, 1500],  # TIT
-                         [2, 8],  # BPR
-                         [1.2, 1.7],  # FPR
-                         [1, 4],  # Nen
-                         [3, 4],  # tech lev
-                         [0.0, 0.1],  # cool air lpt
-                         [0.0, 0.2],  # cool air hpt
-                         [0.5, 1.0],  # engine material quality
-                         [1, 2],  # fan stage number
-                         [2, 4],  # lpc stage number
-                         [8, 10],  # hpc stage number
-                         [1, 3],  # hpt stage number
-                         [1, 5],  # lpt stage number
-                         [0.1, 0.4],  # fan load factor
-                         [0.1, 0.4],  # lpc load factor
-                         [0.3, 0.5],  # hpc load factor
-                         [1.3, 1.6],  # hpt load factor
-                         [1.3, 1.6],  # lpt load factor
-                         [0, 10],  # BPRe
-                         [0, 1.5],  # FPRe
-                         [1, 10],  # Nfan
-                         [0.9, 0.99],  # eng_electriceff
-                         [0.052, 0.52]  # eng_electric_dense
-                         ]
-
-    engine_dv_num = len(engine_dv_names)
-
-    engine_fix_flags = [False for _ in range(engine_dv_num)]
-
+    # build engine design variable class
     OPR = 30
     TIT = 1400
     BPR = 6.0
@@ -482,31 +856,20 @@ def main_():
                   fan_sn, lpc_sn, hpc_sn, hpt_sn, lpt_sn, fan_lf, lpc_lf, hpc_lf, hpt_lf, lpt_lf,
                   BPRe, FPRe, Nfan, eng_electriceff, eng_electric_dense]
 
-    e_dv_sets = [DesignVariable(name) for name in engine_dv_names]
+    # Initialization
+    edv = EngineDesignVariable()
+    edv.create_dv_sets(engine_dvs)
 
-    for idx, ed in enumerate(e_dv_sets):
+    # confirmation
+    print('')
+    print('engine class')
+    for u in edv.e_dv_sets:
+        print(u.val)
+        print(u.bound)
+        print(u.fix)
+    print('')
 
-        ed.set_val(engine_dvs[idx])
-        ed.set_bound(engine_boundaries[idx])
-        ed.fixed(engine_fix_flags[idx])
-
-    ed_bs_index, ed_bf_index = pf_bf_index, pf_bf_index + len(engine_dvs)
-
-    # joint design variables
-    # aircraft
-    aircraft_mounting_dv_names = ['main wing coefficient x', 'main wing coefficient z', 'horizontal wing coefficient x',
-                                  'horizontal wing coefficient z', 'vertical wing coefficient x',
-                                  'vertical wing coefficient z']
-    aircraft_mounting_boundaries = [[0, 1],
-                                    [0, 1],
-                                    [0, 1],
-                                    [0, 1],
-                                    [0, 1],
-                                    [0, 1]]
-
-    aircraft_mounting_dv_num = len(aircraft_mounting_dv_names)
-    aircraft_mounting_fix_flags = [False for _ in range(aircraft_mounting_dv_num)]
-
+    # build joint aircraft design variable class
     acmx = 0.4
     acmz = 0
     achx = 0.9
@@ -516,32 +879,19 @@ def main_():
 
     aircraft_mounting_dvs = [acmx, acmz, achx, achz, acbx, acbz]
 
-    am_dv_sets = [DesignVariable(name) for name in aircraft_mounting_dv_names]
+    # Initialization
+    jadv = JointAircraftDesignVariable()
+    jadv.create_dv_sets(aircraft_mounting_dvs)
 
-    for idx, amd in enumerate(am_dv_sets):
-        amd.set_val(aircraft_mounting_dvs[idx])
-        amd.set_bound(aircraft_mounting_boundaries[idx])
-        amd.fixed(aircraft_mounting_fix_flags[idx])
+    print('')
+    print('Joint aircraft class')
+    for u in jadv.am_dv_sets:
+        print(u.val)
+        print(u.bound)
+        print(u.fix)
+    print('')
 
-    am_bs_index, am_bf_index = ed_bf_index, ed_bf_index + len(aircraft_mounting_dvs)
-
-    # engine
-    engine_mounting_dv_names = ['core engine mounting coefficient x', 'core engine mounting coefficient y',
-                                'core engine moiunting turnover angle', 'core engine sign',
-                                'distributed engine mounting coefficient x', 'distributed engine mounting coefficient y',
-                                'distributed engine mounting turnover angle', 'distributed engine sign']
-    engine_mounting_boundaries = [[0, 1],
-                                  [0, 1],
-                                  [0, 90],
-                                  [-1, 1],
-                                  [0, 1],
-                                  [0, 1],
-                                  [0, 90],
-                                  [-1, 1]]
-
-    engine_mounting_dv_num = len(engine_mounting_dv_names)
-    engine_mounting_fix_flags = [False for _ in range(engine_mounting_dv_num)]
-
+    # build joint engine design variable class
     ecmx = 0.1
     ecmy = 0.1
     theta_ec = 0
@@ -553,71 +903,51 @@ def main_():
 
     engine_mounting_dvs = [ecmx, ecmy, theta_ec, sign_ec, edmx, edmy, theta_ed, sign_ed]
 
-    em_dv_sets = [DesignVariable(name) for name in engine_mounting_dv_names]
+    # Initialization
+    jedv = JointEngineDesignVariable()
+    jedv.create_dv_sets(engine_mounting_dvs)
 
-    for idx, emd in enumerate(em_dv_sets):
-        emd.set_val(engine_mounting_dvs[idx])
-        emd.set_bound(engine_mounting_boundaries[idx])
-        emd.fixed(engine_mounting_fix_flags[idx])
+    print('')
+    print('Joint engine class')
+    for u in jedv.em_dv_sets:
+        print(u.val)
+        print(u.bound)
+        print(u.fix)
+    print('')
 
-    em_bs_index, em_bf_index = am_bf_index, am_bf_index + len(engine_mounting_dvs)
-
-    # BLI
-    bli_dv_names = ['distortion angle']
-    bli_boundaries = [[0, 120]]
-    bli_dv_num = len(bli_dv_names)
-    bli_fix_flags = [False for _ in range(bli_dv_num)]
-
-    dist_ang = 60
-
-    bli_dvs = [dist_ang]
-
-    bli_dv_sets = [DesignVariable(name) for name in bli_dv_names]
-
-    for idx, bld in enumerate(bli_dv_sets):
-        bld.set_val(bli_dvs[idx])
-        bld.set_bound(bli_boundaries[idx])
-        bld.fixed(bli_fix_flags[idx])
-
-    bl_bs_index, bl_bf_index = em_bf_index, em_bf_index + len(bli_dvs)
-
-    # electric
-    electric_dv_names = ['material level', 'battery electric density']
-    electric_boundaries = [[0.1, 1.0], [5.2, 10.0]]
-
-    electric_dv_num = len(electric_dv_names)
-    electric_fix_flags = [False for _ in range(electric_dv_num)]
-
+    # build electric design variable class
     mat_lev = 1.0
     bat_ele_dense = 5.2  # [kW/kg]
     electric_dvs = [mat_lev, bat_ele_dense]
 
-    e_dv_sets = [DesignVariable(name) for name in electric_dv_names]
+    eldv = ElectricDesignVariable()
+    eldv.create_dv_sets(electric_dvs)
 
-    for idx, ed in enumerate(e_dv_sets):
-        ed.set_val(electric_dvs[idx])
-        ed.set_bound(electric_boundaries[idx])
-        ed.fixed(electric_fix_flags[idx])
+    print('')
+    print('Electric class')
+    for u in eldv.e_dv_sets:
+        print(u.val)
+        print(u.bound)
+        print(u.fix)
+    print('')
 
-    ele_bs_index, ele_bf_index = bl_bf_index, bl_bf_index + len(electric_dvs)
+    # build BLI design variable class
+    dist_ang = 60
 
-    # mission
-    mission_dv_names = ['altitude', 'mach number', 'thrust at off design point', 'lift by drag', 'cruise range',
-                        'max takeoff weight', 'passenger number', 'fuel coefficient', 'cargo weight', 'cargo volume']
-    mission_boundaries = [[10000, 14000],
-                          [0.7, 0.9],
-                          [120000, 150000],
-                          [15, 17],
-                          [4500, 5000],
-                          [75000, 80000],
-                          [100, 200],
-                          [0.4, 0.7],
-                          [6000, 7000],
-                          [30, 40]]
+    bli_dvs = [dist_ang]
 
-    mission_dv_num = len(mission_dv_names)
-    mission_fix_flags = [False for _ in range(mission_dv_num)]
+    blidv = BLIDesignVariable()
+    blidv.create_dv_sets(bli_dvs)
 
+    print('')
+    print('BLI class')
+    for u in blidv.bli_dv_sets:
+        print(u.val)
+        print(u.bound)
+        print(u.fix)
+    print('')
+
+    # build mission design variable class
     altitude = 10668  # [m]
     mach_number = 0.82
     thrust_doff = 133000  # [N]
@@ -629,22 +959,19 @@ def main_():
     cargo_weight = 6300  # [kg]
     cargo_volume = 37.63  # [m^3]
 
-    mission_dvs = [altitude, mach_number, thrust_doff, ld, cruise_range, mtow, passenger_num, fuel_coef, cargo_weight, cargo_volume]
+    mission_dvs = [altitude, mach_number, thrust_doff, ld, cruise_range, mtow, passenger_num, fuel_coef, cargo_weight,
+                   cargo_volume]
 
-    m_dv_sets = [DesignVariable(name) for name in mission_dv_names]
+    mdv = MissionDesignVariable()
+    mdv.create_dv_sets(mission_dvs)
 
-    for idx, md in enumerate(m_dv_sets):
-        md.set_val(mission_dvs[idx])
-        md.set_bound(mission_boundaries[idx])
-        md.fixed(mission_fix_flags[idx])
-
-    mis_bs_index, mis_bf_index = ele_bf_index, ele_bf_index + len(mission_dvs)
-    
-
-
-
-
-
+    print('')
+    print('Mission class')
+    for u in mdv.m_dv_sets:
+        print(u.val)
+        print(u.bound)
+        print(u.fix)
+    print('')
 
 
 

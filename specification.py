@@ -311,6 +311,32 @@ Physic class(physics.py)
 Design variables controller class(design_variables_controller.py)
     to assign design variables into each class and adjust the interaction of design variables
 
+    subclass()
+        AircraftFuselage()
+            to manage the behavior against fuselage design variables
+
+        AircraftWing()
+            to manage the behavior against wing design variables(main wing, vertical wing, horizontal wing)
+
+        AircraftPerformance()
+            to manage the behavior against aircraft performance design variables
+
+        Engine()
+            to manage the behavior against engine design variables
+
+        Joint()
+            to manage the behavior against jointly part design variables
+
+        BLI()
+            to manage the required design variables for BLI(Boundary Layer Ingestion)
+
+        Electric()
+            to manage the required design variables for electric components
+
+        Mission()
+            to manage the behavior against mission's design variables
+
+
     init:
         aircraft type
 
