@@ -2,7 +2,7 @@
 class MainWing(object):
 
     def __init__(self):
-
+        self.Nz = 5.9
         pass
 
 

@@ -368,9 +368,12 @@ Mission class(define_mission.py)
         change the design variables in order to be equal to the public max takeoff weight
 
 Aircraft parameters class(aircraft_params.py)
-    to keep the aircraft parameters
+    class AircraftParamsView()
+          to keep the variables for constructing 3D images
 
-    return params => numpy array  * Initialize 0 array
+    class AircraftParamsCompute()
+          to keep the variables for computation(optimization) and calculate variables from design variable class
+
 
 
 Aircraft performance class(aircraft_performance.py)
@@ -669,6 +672,12 @@ Evolutionary Algorithm class()
     plot contour
 
     plot result by jupyter notebook
+
+**Machine Learning Module**
+
+    Optimize design variables with reinforcement learning
+
+    alternate computation by neural network
 
 
 **Self driving module**

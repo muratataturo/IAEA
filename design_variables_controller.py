@@ -716,11 +716,7 @@ class MissionDesignVariable(object):
 # Integration Design Variables Controller
 class DesignVariablesController(object):
 
-    def __init__(self, aircraft_params_class, engine_params_class):
-
-        # Parameter class
-        self.aircraft_params_class = aircraft_params_class
-        self.engine_params_class = engine_params_class
+    def __init__(self):
 
         # start index(s_idx) and final index(f_idx) for each design variables
         # fuselage
