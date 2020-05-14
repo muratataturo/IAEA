@@ -3,24 +3,20 @@ from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
 
-huf = 2.0
-wf = 1.8
-hlf = 2.1
-upper_r = huf / wf
-lower_r = hlf / wf
+huf = 2.0  # upper fuselage height (radius)
+wf = 1.8  # fuselage width (radius)
+hlf = 2.1  # lower fuselage height(fuselage), optimize it from cargo volume
+upper_r = huf / wf  # the ratio of height and width at upper part
+lower_r = hlf / wf  # the ratio of height and width at lower part
 
-hau = 1.0
+hau = 1.0  # height of after cabin upper
 
-l1 = 8
-l2 = 32
-l3 = 36
-l = l3
+l1 = 8  # up to section 1 length
+l2 = 32  # up to section 2 length
+l3 = 36  # up to section 3 length
+l = l3  # total fuselage length
 
 x = np.linspace(0.0, l1, 30)
-
-def f(x):
-
-    return np.sqrt(x)
 
 # x => z => y
 cockpit_arr = []
@@ -218,6 +214,7 @@ hori_wing_arr = np.array(hori_wing_arr)
 vert_wing_arr = np.array(vert_wing_arr)
 
 # engine(main wing down)
+lower = -1
 rin = 0.8
 rout = 0.4
 tin = 0.1
@@ -229,7 +226,7 @@ ty = 0.2
 
 k = 0.4
 
-joint_point = [l * 0.4 + croot * tx, wf + (b / 2 - wf) * ty, np.min(main_wing_arr[:, 2])]
+joint_point = [l * 0.4 + croot * tx, wf + (b / 2 - wf) * ty, lower * np.max(main_wing_arr[:, 2])]
 
 zcen = joint_point[2] - tin - rin
 
@@ -237,11 +234,11 @@ zcen = joint_point[2] - tin - rin
 # engine curve -> z = ax ** 2 + b * x + c
 x = np.linspace(joint_point[0] - k * len, joint_point[0] + (1 - k) * len, 30)
 
-az = (rout - rin) / (1 - 2 * k) / len ** 2
+az = lower * (rin - rout) / (1 - 2 * k) / len ** 2
 bz = -2 * joint_point[0] * az
 cz = joint_point[2] + bz ** 2 / (4 * az)
 
-engine_arr = []
+engine_arr_low = []
 
 for xi in x:
 
@@ -256,16 +253,15 @@ for xi in x:
         yui = joint_point[1] + target
         yli = joint_point[1] - target
 
-        engine_arr.append([xi, yui, zi])
-        engine_arr.append([xi, yli, zi])
-        engine_arr.append([xi, -yui, zi])
-        engine_arr.append([xi, -yli, zi])
+        engine_arr_low.append([xi, yui, zi])
+        engine_arr_low.append([xi, yli, zi])
+        engine_arr_low.append([xi, -yui, zi])
+        engine_arr_low.append([xi, -yli, zi])
 
 
-engine_arr = np.array(engine_arr)
+engine_arr_low = np.array(engine_arr_low)
 
 # engine(main wing upper)
-upper_sign = 1
 joint_point = [l * 0.4 + croot * tx, wf + (b / 2 - wf) * ty, np.max(main_wing_arr[:, 2])]
 
 zcen = joint_point[2] + tin + rin
@@ -300,31 +296,53 @@ for xi in x:
 
 engine_arr_up = np.array(engine_arr_up)
 
+# engine(upper fuselage)
+rin = 0.8
+rout = 0.4
+tin = 0.1
 
+k = 0.4
+len = 5.0
 
-"""
-# base code
-# x => y => z
-arr = []
+theta = 30
+tx = 0.7
+
+eca = np.max(cabin_arr[:, 1])
+ecb = np.max(cabin_arr[:, 2])
+
+r = np.sqrt((eca * np.cos(theta * np.pi / 180.0)) ** 2 + (ecb * np.cos(theta * np.pi / 180.0) ** 2))
+
+joint_point = [l * tx, r * np.cos(theta * np.pi / 180.0), r * np.sin(theta * np.pi / 180.0)]
+
+zcen = (r + rin + tin) * np.sin(theta * np.pi / 180.0)
+
+az = (rin - rout) * np.cos(theta * np.pi / 180.0) / (1 - 2 * k) / len ** 2
+bz = (k * len - 2 * joint_point[0]) * az - tin * np.cos(theta * np.pi / 180.0) / (k * len)
+cz = joint_point[2] - (rin + tin) * np.cos(theta * np.pi / 180.0) - az * joint_point[0] ** 2 - bz * joint_point[0]
+
+x = np.linspace(joint_point[0] - k * len, joint_point[0] + (1 - k) * len, 30)
+
+engine_fus_arr_up = []
+
 for xi in x:
-    y_t = f(xi)
-    y = np.linspace(0.0, y_t, 50)
+    zl = az * xi ** 2 + bz * xi + cz
+    zu = zl + (zcen - zl) * 2
 
-    a = y_t
-    b = y_t * a_to_b
+    z = np.linspace(zl, zu, 30)
 
-    for yi in y:
-        if a == 0:
-            zi = 0
-        else:
-            zi = b * np.sqrt(1.0 - yi ** 2 / a ** 2)
+    for zi in z:
+        target = np.sqrt((zu - zcen) ** 2 - (zi - zcen) ** 2)
+        yui = joint_point[1] + target
+        yli = joint_point[1] - target
 
-        arr.append([xi, yi, zi])
-        arr.append([xi, yi, -zi])
-        arr.append([xi, -yi, zi])
-        arr.append([xi, -yi, -zi])
+        engine_fus_arr_up.append([xi, yui, zi])
+        engine_fus_arr_up.append([xi, yli, zi])
+        engine_fus_arr_up.append([xi, -yui, zi])
+        engine_fus_arr_up.append([xi, -yli, zi])
 
-"""
+
+engine_fus_arr_up = np.array(engine_fus_arr_up)
+
 
 fig = plt.figure()
 ax = Axes3D(fig)
@@ -335,8 +353,9 @@ ax.scatter(after_cabin_arr[:, 0], after_cabin_arr[:, 1], after_cabin_arr[:, 2])
 ax.scatter(main_wing_arr[:, 0], main_wing_arr[:, 1], main_wing_arr[:, 2])
 ax.scatter(hori_wing_arr[:, 0], hori_wing_arr[:, 1], hori_wing_arr[:, 2])
 ax.scatter(vert_wing_arr[:, 0], vert_wing_arr[:, 1], vert_wing_arr[:, 2])
-# ax.scatter(engine_arr[:, 0], engine_arr[:, 1], engine_arr[:, 2])
+ax.scatter(engine_arr_low[:, 0], engine_arr_low[:, 1], engine_arr_low[:, 2])
 ax.scatter(engine_arr_up[:, 0], engine_arr_up[:, 1], engine_arr_up[:, 2])
+ax.scatter(engine_fus_arr_up[:, 0], engine_fus_arr_up[:, 1], engine_fus_arr_up[:, 2])
 
 ax.set_xlim([-10, 40])
 ax.set_ylim([-20, 20])

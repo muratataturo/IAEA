@@ -680,11 +680,11 @@ Evolutionary Algorithm class()
     alternate computation by neural network
 
 
-**Self driving module**
+**Self driving module(Flight Simulator?)**
 
     1.construct the aircraft or drone
 
-    2.SLAM or Reinforcement Learning
+    2.By SLAM or Reinforcement Learning, determine the optimal flight path and be available for autonomous driving
 
 
 **Engine Performance**
