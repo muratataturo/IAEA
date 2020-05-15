@@ -127,92 +127,109 @@ def turnover_3d(theta, n):
 
     return t_arr
 
-# propeller settings
-txs = [0.5, 0.65, 0.75, 0.9]
-thetas = [50, 20, -20, -50]
+joint_radius = 3.0
+joint_angle = 30
+diff_angle = 90
+pr = 0.8  # propeller radius
+lp = 0.8
 
-radius = 1.0
-pr = 0.5
-lp = 0.5
+tx = 0.1
 
-k = 0.3
+joint_point = [l1 + (l2 - l1) * tx, 0, 0]
 
-half_propeller_number = len(txs)
+pr_cen = [joint_point[0] - (joint_radius + pr) * np.sin(joint_angle * np.pi / 180.0),
+          joint_point[1] + (joint_radius + pr) * np.cos(joint_angle * np.pi / 180.0),
+          joint_point[2]]
 
-joint_points = []
+k = 0.3  # joint coefficient
 
-for idx in range(half_propeller_number):
-    point = [l * txs[idx], np.max(cabin_arr[:, 1]), 0]
-    joint_points.append(point)
+z = np.linspace(-(1 - k) * lp, k * lp, 30)
 
-propeller_arr_l = []
-propeller_arr_r = []
+propeller_arr = []
 
-unit_vec = np.array([1, 0, 0])
+for zi in z:
 
-for theta, joint_point in zip(thetas, joint_points):
-    center = np.array([joint_point[0] - (radius + pr) * np.sin(theta * np.pi / 180.0), joint_point[1] + (radius + pr) * np.cos(theta * np.pi / 180.0), joint_point[2]])
+    x = np.linspace(pr_cen[0] - pr, pr_cen[0] + pr, 30)
 
-    z = np.linspace(-k * lp, (1 - k) * lp, 30)
+    for xi in x:
+        target = np.sqrt(pr ** 2 - (xi - pr_cen[0]) ** 2)
+        yui = pr_cen[1] + target
+        yli = pr_cen[1] - target
 
-    for zi in z:
+        propeller_arr.append([xi, yui, zi])
+        propeller_arr.append([xi, yli, zi])
+        lr = (joint_radius + pr) / np.sin(45 * np.pi / 180.0)
+        propeller_arr.append([xi + lr * np.cos((45 - joint_angle) * np.pi / 180.0), yui - lr * np.sin((45 - joint_angle) * np.pi / 180.0), zi])
+        propeller_arr.append([xi + lr * np.cos((45 - joint_angle) * np.pi / 180.0), yli - lr * np.sin((45 - joint_angle) * np.pi / 180.0), zi])
 
-        x = np.linspace(center[0] - pr, center[0] + pr, 30)
+propeller_arr = np.array(propeller_arr)
 
-        for xi in x:
-            target = np.sqrt(pr ** 2 - (xi - center[0]) ** 2)
-            yui = center[1] + target
-            yli = center[1] - target
+# 3D turnover array
+theta = 180
+theta = theta * np.pi / 180.0
+n = np.array([1, 0, 0])  # z axis unit vector
 
-            plu = [xi, yui, zi]
-            pll = [xi, yli, zi]
-            propeller_arr_l.append(plu)
-            propeller_arr_l.append(pll)
+propeller_arr1 = []
 
-            pru = [xi, -yui, zi]
-            prl = [xi, -yli, zi]
-            propeller_arr_r.append(pru)
-            propeller_arr_r.append(prl)
+for p_arr in propeller_arr:
+    t_arr = turnover_3d(theta, n)
+    target_vec = np.dot(t_arr.T, p_arr) - np.array([0, 0, 0.5 * lp])
+    propeller_arr1.append(target_vec)
 
 
-propeller_arr_l = np.array(propeller_arr_l)
-propeller_arr_r = np.array(propeller_arr_r)
-
-# z axis 3d turnover
-propeller_arr = np.concatenate([propeller_arr_l, propeller_arr_r], axis=0)
+propeller_arr1 = np.array(propeller_arr1)
 
 # poll
 poll_r = 0.1
+x = np.linspace(joint_point[0] - joint_radius - pr, joint_point[0], 30)
 
 poll_arr = []
 
-for idx in range(half_propeller_number):
+for xi in x:
 
-    rep_j = joint_points[idx]
-    x = np.linspace(0, radius + pr, 30)
+    y = np.linspace(-poll_r, poll_r, 30)
 
-    t_arr = turnover_3d(thetas[idx] - 90, np.array([0, 0, 1]))
+    for yi in y:
+        zui = np.sqrt(poll_r ** 2 - yi ** 2)
+        zli = -zui
 
-    for xi in x:
-        y = np.linspace(- poll_r, poll_r, 30)
-
-        for yi in y:
-            target = np.sqrt(poll_r ** 2 - yi ** 2)
-            zui = target
-            zli = - target
-
-            pu = [xi, yi, zui]
-            pl = [xi, yi, zli]
-            poll_arr.append(pu)
-            poll_arr.append(pl)
-
-            puu = np.dot(t_arr.T, np.array(pu)) + np.array([rep_j[0], rep_j[1], rep_j[2]])
-            pll = np.dot(t_arr.T, np.array(pl)) + np.array([rep_j[0], rep_j[1], rep_j[2]])
-            poll_arr.append(puu.tolist())
-            poll_arr.append(pll.tolist())
+        poll_arr.append([xi, yi, zui])
+        poll_arr.append([xi, yi, zli])
 
 
-poll_arr = np.array(poll_arr)
+# 3D turnover
+# 3D turnover array
+thetas = np.array([joint_angle, joint_angle + diff_angle])
+# thetas = np.array([60, 120, 180, 240, 300, 360])
+thetas = thetas * np.pi / 180.0
+n = np.array([0, 0, 1])  # z axis unit vector
+
+poll_cen = [joint_point[0], joint_point[1], joint_point[2]]
+poll_cen = np.array(poll_cen)
+
+poll_arr1 = []
+for p_arr in poll_arr:
+
+    for theta in thetas:
+        t_arr = turnover_3d(theta, n)
+        p = np.dot(t_arr.T, p_arr) + poll_cen
+        poll_arr1.append(p)
+
+
+poll_arr1 = np.array(poll_arr1)
+
+# horizontal flip
+poll_arr2 = []
+
+for p_arr in poll_arr1:
+    t_arr = turnover_3d(180 - diff_angle / 2, np.array([1, 0, 0]))
+    p = np.dot(t_arr.T, p_arr) - np.array([0, 0, 0.5 * poll_r])
+    poll_arr2.append(p)
+
+poll_arr2 = np.array(poll_arr2)
+
+
+
 
 # 3D plot
 fig = plt.figure()
@@ -223,11 +240,15 @@ ax.scatter(cockpit_arr[:, 0], cockpit_arr[:, 1], cockpit_arr[:, 2])
 ax.scatter(cabin_arr[:, 0], cabin_arr[:, 1], cabin_arr[:, 2])
 ax.scatter(after_cabin_arr[:, 0], after_cabin_arr[:, 1], after_cabin_arr[:, 2])
 ax.scatter(propeller_arr[:, 0], propeller_arr[:, 1], propeller_arr[:, 2])
-ax.scatter(poll_arr[:, 0], poll_arr[:, 1], poll_arr[:, 2])
+ax.scatter(propeller_arr1[:, 0], propeller_arr1[:, 1], propeller_arr1[:, 2])
+ax.scatter(poll_arr1[:, 0], poll_arr1[:, 1], poll_arr1[:, 2])
+ax.scatter(poll_arr2[:, 0], poll_arr2[:, 1], poll_arr2[:, 2])
 
 ax.set_xlim([-2, 8])
 ax.set_ylim([-5, 5])
 ax.set_zlim([-5, 5])
+
+# plt.savefig('./Pictures/drone_center.png')
 
 plt.show()
 

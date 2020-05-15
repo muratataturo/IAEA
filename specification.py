@@ -85,6 +85,8 @@
                [core: inlet, lpc, hpc, cc, hpt, hptcool, lpt, lptcool, coreout, nozzle, jet, fan, fan_nozzle, fan_jet],
                [battery]
 
+        11. Geared Turbofan
+
 
 **Initial parameters**
 

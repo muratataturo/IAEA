@@ -2,7 +2,7 @@ import matplotlib.pyplot as plt
 from mpl_toolkits.mplot3d import Axes3D
 import numpy as np
 
-
+# ToDo: arrange and clarify the arguments and split the module based on function
 huf = 2.0  # upper fuselage height (radius)
 wf = 1.8  # fuselage width (radius)
 hlf = 2.1  # lower fuselage height(fuselage), optimize it from cargo volume
@@ -18,6 +18,8 @@ l = l3  # total fuselage length
 
 x = np.linspace(0.0, l1, 30)
 
+# ToDo: repair the implementation by bezier curve
+# cockpit
 # x => z => y
 cockpit_arr = []
 zupper = []
@@ -360,6 +362,8 @@ ax.scatter(engine_fus_arr_up[:, 0], engine_fus_arr_up[:, 1], engine_fus_arr_up[:
 ax.set_xlim([-10, 40])
 ax.set_ylim([-20, 20])
 ax.set_zlim([-10, 10])
+
+# plt.savefig('./Pictures/normal.png')
 
 plt.show()
 
