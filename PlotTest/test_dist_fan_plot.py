@@ -58,9 +58,7 @@ for xi, bzl, bzu, by in zip(x, bezier_zl, bezier_zu, bezier_y):
         cockpit_arr.append([xi, yi, zui])
         cockpit_arr.append([xi, yi, zli])
 
-
 cockpit_arr = np.array(cockpit_arr)
-
 
 """
 zupper = []
@@ -111,7 +109,6 @@ for xi in x:
         cabin_arr.append([xi, yi, zui])
         cabin_arr.append([xi, yi, -zli])
 
-
 # after cabin part
 after_cabin_arr = []
 x = np.linspace(l2, l3, 50)
@@ -136,14 +133,12 @@ for xi, bzl, bzu, by in zip(x, bezier_zl, bezier_zu, bezier_y):
 
     for yi in y:
         zui = bzu * np.sqrt(1 - yi ** 2 / by ** 2)
-        zli = bzl * np.sqrt(1 - yi ** 2/ by ** 2)
+        zli = bzl * np.sqrt(1 - yi ** 2 / by ** 2)
 
         after_cabin_arr.append([xi, yi, zui])
         after_cabin_arr.append([xi, yi, zli])
 
-
 after_cabin_arr = np.array(after_cabin_arr)
-
 
 """
 after_cabin_arr = []
@@ -183,19 +178,20 @@ for xi in x:
 
         after_cabin_arr.append([xi, yi, zui])
         after_cabin_arr.append([xi, yi, -zli])
-        
-"""
 
+"""
 
 # main wing
 ctip = 1
 croot = 5
 b = 40
-theta = 25
+retreat_angle = 25
 
 BX = croot * (b / 2 - wf) / (croot - ctip)
 
-st = [l * 0.4, wf]
+jmx = 0.4
+
+st = [l * jmx, wf]
 
 y = np.linspace(wf, b / 2, 30)
 
@@ -206,7 +202,7 @@ tc = 0.11
 main_wing_arr = []
 
 for yi in y:
-    xu = np.tan(theta * np.pi / 180) * (yi - wf) + st[0]
+    xu = np.tan(retreat_angle * np.pi / 180) * (yi - wf) + st[0]
     cx = (1.0 - (yi - wf) / BX) * croot
     xl = xu + cx
 
@@ -221,12 +217,11 @@ for yi in y:
         main_wing_arr.append([xi, -yi, zui])
         main_wing_arr.append([xi, -yi, zli])
 
-
 # horizontal wing
 chtip = 0.6
 chroot = 3
 bh = 15
-theta = 20
+thetah = 20
 
 BXh = chroot * (bh / 2 - wf) / (chroot - chtip)
 
@@ -241,7 +236,7 @@ tc = 0.1
 hori_wing_arr = []
 
 for yi in y:
-    xu = np.tan(theta * np.pi / 180) * (yi - wf) + sth[0]
+    xu = np.tan(thetah * np.pi / 180) * (yi - wf) + sth[0]
     cx = (1.0 - (yi - wf) / BXh) * chroot
     xl = xu + cx
 
@@ -260,7 +255,7 @@ for yi in y:
 cvtip = 0.6
 cvroot = 3
 bv = 10
-theta = 45
+thetav = 45
 
 BXv = cvroot * (bv / 2 - wf) / (cvroot - cvtip)
 
@@ -275,7 +270,7 @@ tc = 0.1
 vert_wing_arr = []
 
 for zi in z:
-    xu = np.tan(theta * np.pi / 180) * (zi - hau) + stv[0]
+    xu = np.tan(thetav * np.pi / 180) * (zi - hau) + stv[0]
     cx = (1.0 - (zi - hau) / BXv) * cvroot
     xl = xu + cx
 
@@ -295,6 +290,9 @@ main_wing_arr = np.array(main_wing_arr)
 hori_wing_arr = np.array(hori_wing_arr)
 vert_wing_arr = np.array(vert_wing_arr)
 
+##############Distributed fan############
+
+
 # engine(main wing down)
 lower = -1
 rin = 0.8
@@ -303,21 +301,21 @@ tin = 0.1
 
 len = 4.0
 
-tx = 0.4
-ty = 0.4
+tx = 0.2
+ty = 0.2
 
 k = 0.4
 
-joint_point = [l * 0.4 + croot * tx, wf + (b / 2 - wf) * ty, lower * np.max(main_wing_arr[:, 2])]
+joint_point_ml = [l * jmx + croot * tx, wf + (b / 2 - wf) * ty, lower * np.max(main_wing_arr[:, 2])]
 
-zcen = joint_point[2] - tin - rin
+zcen = joint_point_ml[2] - tin - rin
 
 # engine curve -> z = ax ** 2 + b * x + c
-x = np.linspace(joint_point[0] - k * len, joint_point[0] + (1 - k) * len, 30)
+x = np.linspace(joint_point_ml[0] - k * len, joint_point_ml[0] + (1 - k) * len, 30)
 
 az = lower * (rin - rout) / (1 - 2 * k) / len ** 2
-bz = -2 * joint_point[0] * az
-cz = joint_point[2] + bz ** 2 / (4 * az)
+bz = -2 * joint_point_ml[0] * az
+cz = joint_point_ml[2] + bz ** 2 / (4 * az)
 
 engine_arr_low = []
 
@@ -331,28 +329,92 @@ for xi in x:
 
     for zi in z:
         target = np.sqrt((zu - zcen) ** 2 - (zi - zcen) ** 2)
-        yui = joint_point[1] + target
-        yli = joint_point[1] - target
+        yui = joint_point_ml[1] + target
+        yli = joint_point_ml[1] - target
 
         engine_arr_low.append([xi, yui, zi])
         engine_arr_low.append([xi, yli, zi])
         engine_arr_low.append([xi, -yui, zi])
         engine_arr_low.append([xi, -yli, zi])
 
-
 engine_arr_low = np.array(engine_arr_low)
 
-# engine(main wing upper)
-joint_point = [l * 0.4 + croot * tx, wf + (b / 2 - wf) * ty, np.max(main_wing_arr[:, 2])]
 
-zcen = joint_point[2] + tin + rin
+# distributed fan(lower)
+nfan = 6
+rfin = 0.6
+rfout = 0.4
+lower = -1
+
+r_afford = 0.1
+
+theta = retreat_angle
+
+tin = 0.1
+
+lfan = 2.0
+
+k = 0.1
+
+joint_point_init = joint_point_ml
+
+engine_arr_dist_low = []
+
+for n in range(nfan):
+
+    diff_r = (1.0 + r_afford) * 2 * (n + 1)
+    joint_point = [joint_point_init[0] + diff_r * np.sin(theta * np.pi / 180.0), joint_point_init[1] + diff_r * np.cos(theta * np.pi / 180.0), joint_point_init[2]]
+    zcen = joint_point[2] - tin - rin
+
+    # engine curve -> z = ax ** 2 + b * x + c
+    x = np.linspace(joint_point[0] - k * lfan, joint_point[0] + (1 - k) * lfan, 30)
+
+    az = lower * (rfin - rfout) / (1 - 2 * k) / lfan ** 2
+    bz = -2 * joint_point[0] * az
+    cz = joint_point[2] + bz ** 2 / (4 * az)
+
+    for xi in x:
+
+        zu = az * xi ** 2 + bz * xi + cz
+
+        zl = 2 * zcen - zu
+
+        z = np.linspace(zl, zu, 30)
+
+        for zi in z:
+            target = np.sqrt((zu - zcen) ** 2 - (zi - zcen) ** 2)
+            yui = joint_point[1] + target
+            yli = joint_point[1] - target
+
+            engine_arr_dist_low.append([xi, yui, zi])
+            engine_arr_dist_low.append([xi, yli, zi])
+            engine_arr_dist_low.append([xi, -yui, zi])
+            engine_arr_dist_low.append([xi, -yli, zi])
+
+engine_arr_dist_low = np.array(engine_arr_dist_low)
+
+# engine(main wing upper)
+lower = -1
+rin = 1.0
+rout = 0.6
+tin = 0.1
+
+len = 4.0
+
+tx = 0.3
+ty = 0.3
+
+k = 0.4
+joint_point_mu = [l * jmx + croot * tx, wf + (b / 2 - wf) * ty, np.max(main_wing_arr[:, 2])]
+
+zcen = joint_point_mu[2] + tin + rin
 
 # engine curve -> z = ax ** 2 + b * x + c
-x = np.linspace(joint_point[0] - k * len, joint_point[0] + (1 - k) * len, 30)
+x = np.linspace(joint_point_mu[0] - k * len, joint_point_mu[0] + (1 - k) * len, 30)
 
 az = (rin - rout) / (1 - 2 * k) / len ** 2
-bz = -2 * joint_point[0] * az
-cz = joint_point[2] + bz ** 2 / (4 * az)
+bz = -2 * joint_point_mu[0] * az
+cz = joint_point_mu[2] + bz ** 2 / (4 * az)
 
 engine_arr_up = []
 
@@ -366,16 +428,68 @@ for xi in x:
 
     for zi in z:
         target = np.sqrt((zu - zcen) ** 2 - (zi - zcen) ** 2)
-        yui = joint_point[1] + target
-        yli = joint_point[1] - target
+        yui = joint_point_mu[1] + target
+        yli = joint_point_mu[1] - target
 
         engine_arr_up.append([xi, yui, zi])
         engine_arr_up.append([xi, yli, zi])
         engine_arr_up.append([xi, -yui, zi])
         engine_arr_up.append([xi, -yli, zi])
 
-
 engine_arr_up = np.array(engine_arr_up)
+
+# distributed fan(upper)
+nfan = 4
+rfin = 0.6
+rfout = 0.4
+lower = -1
+
+r_afford = 0.1
+
+theta = retreat_angle
+
+tin = 0.1
+
+lfan = 2.0
+
+k = 0.1
+
+joint_point_init = joint_point_mu
+
+engine_arr_dist_up = []
+
+for n in range(nfan):
+
+    diff_r = (1.0 + r_afford) * 2 * (n + 1)
+    joint_point = [joint_point_init[0] + diff_r * np.sin(theta * np.pi / 180.0), joint_point_init[1] + diff_r * np.cos(theta * np.pi / 180.0), joint_point_init[2]]
+    zcen = joint_point[2] + tin + rin
+
+    # engine curve -> z = ax ** 2 + b * x + c
+    x = np.linspace(joint_point[0] - k * lfan, joint_point[0] + (1 - k) * lfan, 30)
+
+    az = (rfin - rfout) / (1 - 2 * k) / lfan ** 2
+    bz = -2 * joint_point[0] * az
+    cz = joint_point[2] + bz ** 2 / (4 * az)
+
+    for xi in x:
+
+        zu = az * xi ** 2 + bz * xi + cz
+
+        zl = 2 * zcen - zu
+
+        z = np.linspace(zl, zu, 30)
+
+        for zi in z:
+            target = np.sqrt((zu - zcen) ** 2 - (zi - zcen) ** 2)
+            yui = joint_point[1] + target
+            yli = joint_point[1] - target
+
+            engine_arr_dist_up.append([xi, yui, zi])
+            engine_arr_dist_up.append([xi, yli, zi])
+            engine_arr_dist_up.append([xi, -yui, zi])
+            engine_arr_dist_up.append([xi, -yli, zi])
+
+engine_arr_dist_up = np.array(engine_arr_dist_up)
 
 # engine(upper fuselage)
 rin = 0.8
@@ -391,7 +505,7 @@ tx = 0.7
 eca = np.max(cabin_arr[:, 1])
 ecb = np.max(cabin_arr[:, 2])
 
-r = np.sqrt((eca * np.cos(theta * np.pi / 180.0)) ** 2 + (ecb * np.cos(theta * np.pi / 180.0) ** 2))
+r = np.sqrt((eca * np.cos(theta * np.pi / 180.0)) ** 2 + (ecb * np.sin(theta * np.pi / 180.0)) ** 2)
 
 joint_point = [l * tx, r * np.cos(theta * np.pi / 180.0), r * np.sin(theta * np.pi / 180.0)]
 
@@ -421,22 +535,71 @@ for xi in x:
         engine_fus_arr_up.append([xi, -yui, zi])
         engine_fus_arr_up.append([xi, -yli, zi])
 
-
 engine_fus_arr_up = np.array(engine_fus_arr_up)
 
+
+# distributed fan(fuselage)
+rin = 0.4
+rout = 0.2
+tin = 0.1
+
+k = 0.4
+len = 5.0
+
+theta = 90
+tx = 0.7
+
+eca = np.max(cabin_arr[:, 1])
+ecb = np.max(cabin_arr[:, 2])
+
+r = np.sqrt((eca * np.cos(theta * np.pi / 180.0)) ** 2 + (ecb * np.sin(theta * np.pi / 180.0)) ** 2)
+
+joint_point = [l * tx, r * np.cos(theta * np.pi / 180.0), r * np.sin(theta * np.pi / 180.0)]
+
+zcen = (r + rin + tin) * np.sin(theta * np.pi / 180.0)
+
+az = (rin - rout) * np.cos(theta * np.pi / 180.0) / (1 - 2 * k) / len ** 2
+bz = (k * len - 2 * joint_point[0]) * az - tin * np.cos(theta * np.pi / 180.0) / (k * len)
+cz = joint_point[2] - (rin + tin) * np.cos(theta * np.pi / 180.0) - az * joint_point[0] ** 2 - bz * joint_point[0]
+
+x = np.linspace(joint_point[0] - k * len, joint_point[0] + (1 - k) * len, 30)
+
+engine_fus_arr_dist_up = []
+
+for xi in x:
+    zl = az * xi ** 2 + bz * xi + cz
+    zu = zl + (zcen - zl) * 2
+
+    z = np.linspace(zl, zu, 30)
+
+    for zi in z:
+        target = np.sqrt((zu - zcen) ** 2 - (zi - zcen) ** 2)
+        yui = joint_point[1] + target
+        yli = joint_point[1] - target
+
+        engine_fus_arr_dist_up.append([xi, yui, zi])
+        engine_fus_arr_dist_up.append([xi, yli, zi])
+        if theta != 90:
+            engine_fus_arr_dist_up.append([xi, -yui, zi])
+            engine_fus_arr_dist_up.append([xi, -yli, zi])
+
+engine_fus_arr_dist_up = np.array(engine_fus_arr_dist_up)
 
 fig = plt.figure()
 ax = Axes3D(fig)
 
 ax.scatter(cockpit_arr[:, 0], cockpit_arr[:, 1], cockpit_arr[:, 2])
-ax.scatter(cabin_arr[:, 0], cabin_arr[:, 1], cabin_arr[:, 2])
+# ax.scatter(cabin_arr[:, 0], cabin_arr[:, 1], cabin_arr[:, 2])
 ax.scatter(after_cabin_arr[:, 0], after_cabin_arr[:, 1], after_cabin_arr[:, 2])
-ax.scatter(main_wing_arr[:, 0], main_wing_arr[:, 1], main_wing_arr[:, 2])
+# ax.scatter(main_wing_arr[:, 0], main_wing_arr[:, 1], main_wing_arr[:, 2])
 ax.scatter(hori_wing_arr[:, 0], hori_wing_arr[:, 1], hori_wing_arr[:, 2])
 ax.scatter(vert_wing_arr[:, 0], vert_wing_arr[:, 1], vert_wing_arr[:, 2])
-ax.scatter(engine_arr_low[:, 0], engine_arr_low[:, 1], engine_arr_low[:, 2])
-ax.scatter(engine_arr_up[:, 0], engine_arr_up[:, 1], engine_arr_up[:, 2])
+# ax.scatter(engine_arr_low[:, 0], engine_arr_low[:, 1], engine_arr_low[:, 2])
+# ax.scatter(engine_arr_dist_low[:, 0], engine_arr_dist_low[:, 1], engine_arr_dist_low[:, 2])
+# ax.scatter(engine_arr_up[:, 0], engine_arr_up[:, 1], engine_arr_up[:, 2])
+# ax.scatter(engine_arr_dist_up[:, 0], engine_arr_dist_up[:, 1], engine_arr_dist_up[:, 2])
 ax.scatter(engine_fus_arr_up[:, 0], engine_fus_arr_up[:, 1], engine_fus_arr_up[:, 2])
+ax.scatter(engine_fus_arr_dist_up[:, 0], engine_fus_arr_dist_up[:, 1], engine_fus_arr_dist_up[:, 2])
 
 ax.set_xlim([-10, 40])
 ax.set_ylim([-20, 20])
@@ -445,7 +608,3 @@ ax.set_zlim([-15, 15])
 # plt.savefig('./Pictures/normal.png')
 
 plt.show()
-
-
-
-

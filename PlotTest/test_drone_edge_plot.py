@@ -126,7 +126,7 @@ bezier_zu = []
 bezier_zl = []
 
 qzu = np.array([[l2, huf], [l3, hau], [l3, hau]])
-qzl = np.array([[l2, -hlf], [l3, -hlc], [l3, hau]])
+qzl = np.array([[l2, -hlf], [l3, -hlc], [l3, 0]])
 
 bezier_y = []
 
